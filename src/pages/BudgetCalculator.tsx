@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { GraduationCap } from "lucide-react";
+import { Link } from "react-router-dom";
 import ExpenseForm from "@/components/budget/ExpenseForm";
 import BudgetSummary from "@/components/budget/BudgetSummary";
 import FundingOptions from "@/components/budget/FundingOptions";
@@ -57,10 +58,10 @@ const BudgetCalculator = () => {
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <GraduationCap className="h-8 w-8 text-primary" />
             <span className="text-2xl font-bold text-primary">StudyAbroad</span>
-          </div>
+          </Link>
         </div>
       </header>
 
