@@ -1,11 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap, Star, CheckCircle } from "lucide-react";
+import { GraduationCap, Star, CheckCircle, Clock, AlertTriangle, Calendar } from "lucide-react";
 
 const ApplicationTracker = () => {
   const [applications] = useState([
@@ -53,6 +53,16 @@ const ApplicationTracker = () => {
     }
   ]);
 
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "In Progress": return "bg-yellow-100 text-yellow-800";
@@ -70,6 +80,70 @@ const ApplicationTracker = () => {
     return Math.round((completed / total) * 100);
   };
 
+  const getTimeUntilDeadline = (deadline: string) => {
+    const deadlineDate = new Date(deadline);
+    const timeDiff = deadlineDate.getTime() - currentTime.getTime();
+    
+    if (timeDiff <= 0) {
+      return { text: "Deadline passed", urgency: "expired", days: 0 };
+    }
+
+    const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    
+    if (days <= 7) {
+      return { text: `${days} day${days === 1 ? '' : 's'} left`, urgency: "critical", days };
+    } else if (days <= 30) {
+      return { text: `${days} days left`, urgency: "warning", days };
+    } else {
+      return { text: `${days} days left`, urgency: "normal", days };
+    }
+  };
+
+  const getUrgencyBadge = (urgency: string) => {
+    switch (urgency) {
+      case "expired":
+        return "bg-red-500 text-white";
+      case "critical":
+        return "bg-red-100 text-red-800 animate-pulse";
+      case "warning":
+        return "bg-orange-100 text-orange-800";
+      default:
+        return "bg-green-100 text-green-800";
+    }
+  };
+
+  const getUrgencyIcon = (urgency: string) => {
+    switch (urgency) {
+      case "expired":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "critical":
+        return <AlertTriangle className="h-4 w-4" />;
+      case "warning":
+        return <Clock className="h-4 w-4" />;
+      default:
+        return <Calendar className="h-4 w-4" />;
+    }
+  };
+
+  // Sort applications by urgency and deadline
+  const sortedApplications = [...applications].sort((a, b) => {
+    const timeA = getTimeUntilDeadline(a.deadline);
+    const timeB = getTimeUntilDeadline(b.deadline);
+    
+    // Prioritize by urgency first, then by days remaining
+    if (timeA.urgency === timeB.urgency) {
+      return timeA.days - timeB.days;
+    }
+    
+    const urgencyOrder = { "expired": 0, "critical": 1, "warning": 2, "normal": 3 };
+    return urgencyOrder[timeA.urgency] - urgencyOrder[timeB.urgency];
+  });
+
+  const urgentApplications = applications.filter(app => {
+    const timeInfo = getTimeUntilDeadline(app.deadline);
+    return timeInfo.urgency === "critical" || timeInfo.urgency === "expired";
+  });
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -80,7 +154,13 @@ const ApplicationTracker = () => {
               <GraduationCap className="h-8 w-8 text-primary" />
               <span className="text-2xl font-bold text-primary">StudyAbroad</span>
             </div>
-            <Button>Add New Application</Button>
+            <div className="flex items-center space-x-4">
+              <div className="text-sm text-muted-foreground">
+                <Clock className="h-4 w-4 inline mr-1" />
+                {currentTime.toLocaleTimeString()}
+              </div>
+              <Button>Add New Application</Button>
+            </div>
           </div>
         </div>
       </header>
@@ -90,6 +170,34 @@ const ApplicationTracker = () => {
           <h1 className="text-3xl font-bold mb-2">Application Tracker</h1>
           <p className="text-muted-foreground">Keep track of your university applications and deadlines</p>
         </div>
+
+        {/* Urgent Alerts */}
+        {urgentApplications.length > 0 && (
+          <Card className="mb-6 border-red-200 bg-red-50">
+            <CardHeader>
+              <CardTitle className="text-red-800 flex items-center">
+                <AlertTriangle className="h-5 w-5 mr-2" />
+                Urgent Deadlines
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {urgentApplications.map(app => {
+                  const timeInfo = getTimeUntilDeadline(app.deadline);
+                  return (
+                    <div key={app.id} className="flex justify-between items-center p-2 bg-white rounded">
+                      <span className="font-medium">{app.university} - {app.program}</span>
+                      <Badge className={getUrgencyBadge(timeInfo.urgency)}>
+                        {getUrgencyIcon(timeInfo.urgency)}
+                        <span className="ml-1">{timeInfo.text}</span>
+                      </Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Summary Cards */}
         <div className="grid md:grid-cols-4 gap-4 mb-8">
@@ -113,86 +221,121 @@ const ApplicationTracker = () => {
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-purple-600">1</div>
-              <div className="text-sm text-muted-foreground">Waitlisted</div>
+              <div className="text-2xl font-bold text-red-600">{urgentApplications.length}</div>
+              <div className="text-sm text-muted-foreground">Urgent Deadlines</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Applications List */}
         <div className="space-y-6">
-          {applications.map((app) => (
-            <Card key={app.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-xl">{app.university}</CardTitle>
-                    <CardDescription className="text-base mt-1">{app.program}</CardDescription>
-                  </div>
-                  <Badge className={getStatusColor(app.status)}>
-                    {app.status}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Application Info */}
-                  <div>
-                    <div className="mb-4">
-                      <Label className="text-sm text-muted-foreground">Application Deadline</Label>
-                      <p className="font-medium">{new Date(app.deadline).toLocaleDateString()}</p>
+          {sortedApplications.map((app) => {
+            const timeInfo = getTimeUntilDeadline(app.deadline);
+            return (
+              <Card key={app.id} className={`hover:shadow-lg transition-shadow ${
+                timeInfo.urgency === "critical" ? "border-red-300 shadow-red-100" : 
+                timeInfo.urgency === "warning" ? "border-orange-300 shadow-orange-100" : ""
+              }`}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-xl">{app.university}</CardTitle>
+                      <CardDescription className="text-base mt-1">{app.program}</CardDescription>
                     </div>
-                    
-                    <div className="mb-4">
-                      <Label className="text-sm text-muted-foreground">Progress</Label>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <div className="flex-1 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-primary h-2 rounded-full" 
-                            style={{ width: `${getProgressPercentage(app.requirements)}%` }}
-                          ></div>
+                    <div className="flex space-x-2">
+                      <Badge className={getStatusColor(app.status)}>
+                        {app.status}
+                      </Badge>
+                      <Badge className={getUrgencyBadge(timeInfo.urgency)}>
+                        {getUrgencyIcon(timeInfo.urgency)}
+                        <span className="ml-1">{timeInfo.text}</span>
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Application Info */}
+                    <div>
+                      <div className="mb-4">
+                        <Label className="text-sm text-muted-foreground">Application Deadline</Label>
+                        <div className="flex items-center space-x-2">
+                          <p className="font-medium">{new Date(app.deadline).toLocaleDateString()}</p>
+                          <div className="text-sm text-muted-foreground">
+                            ({timeInfo.text})
+                          </div>
                         </div>
-                        <span className="text-sm font-medium">{getProgressPercentage(app.requirements)}%</span>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <Label className="text-sm text-muted-foreground">Progress</Label>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <div className="flex-1 bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-primary h-2 rounded-full" 
+                              style={{ width: `${getProgressPercentage(app.requirements)}%` }}
+                            ></div>
+                          </div>
+                          <span className="text-sm font-medium">{getProgressPercentage(app.requirements)}%</span>
+                        </div>
+                      </div>
+
+                      {/* Countdown Timer for urgent deadlines */}
+                      {(timeInfo.urgency === "critical" || timeInfo.urgency === "warning") && (
+                        <div className="mb-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                          <Label className="text-sm text-orange-800 font-medium flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            Time Remaining
+                          </Label>
+                          <div className="text-lg font-bold text-orange-800 mt-1">
+                            {timeInfo.text}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Requirements Checklist */}
+                    <div>
+                      <Label className="text-sm text-muted-foreground mb-3 block">Requirements</Label>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className={`h-4 w-4 ${app.requirements.sop ? 'text-green-500' : 'text-gray-300'}`} />
+                          <span className="text-sm">Statement of Purpose</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className={`h-4 w-4 ${app.requirements.transcripts ? 'text-green-500' : 'text-gray-300'}`} />
+                          <span className="text-sm">Academic Transcripts</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className={`h-4 w-4 ${app.requirements.lor ? 'text-green-500' : 'text-gray-300'}`} />
+                          <span className="text-sm">Letters of Recommendation</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className={`h-4 w-4 ${app.requirements.test_scores ? 'text-green-500' : 'text-gray-300'}`} />
+                          <span className="text-sm">Test Scores (IELTS/TOEFL)</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className={`h-4 w-4 ${app.requirements.portfolio ? 'text-green-500' : 'text-gray-300'}`} />
+                          <span className="text-sm">Portfolio (if required)</span>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Requirements Checklist */}
-                  <div>
-                    <Label className="text-sm text-muted-foreground mb-3 block">Requirements</Label>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-4 w-4 ${app.requirements.sop ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className="text-sm">Statement of Purpose</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-4 w-4 ${app.requirements.transcripts ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className="text-sm">Academic Transcripts</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-4 w-4 ${app.requirements.lor ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className="text-sm">Letters of Recommendation</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-4 w-4 ${app.requirements.test_scores ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className="text-sm">Test Scores (IELTS/TOEFL)</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className={`h-4 w-4 ${app.requirements.portfolio ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className="text-sm">Portfolio (if required)</span>
-                      </div>
-                    </div>
+                  <div className="flex space-x-2 mt-6">
+                    <Button variant="outline" size="sm">Update Status</Button>
+                    <Button variant="outline" size="sm">View Details</Button>
+                    <Button variant="outline" size="sm">Add Notes</Button>
+                    {timeInfo.urgency === "critical" && (
+                      <Button size="sm" className="bg-red-600 hover:bg-red-700">
+                        Set Reminder
+                      </Button>
+                    )}
                   </div>
-                </div>
-
-                <div className="flex space-x-2 mt-6">
-                  <Button variant="outline" size="sm">Update Status</Button>
-                  <Button variant="outline" size="sm">View Details</Button>
-                  <Button variant="outline" size="sm">Add Notes</Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Empty State */}
