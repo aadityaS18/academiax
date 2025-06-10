@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GraduationCap, Search, Star } from "lucide-react";
+import { GraduationCap, Search, Star, ExternalLink } from "lucide-react";
 
 const UniversityMatch = () => {
   const [profile, setProfile] = useState({
@@ -25,7 +24,8 @@ const UniversityMatch = () => {
       ranking: "#1 in Canada",
       tuition: "$45,000 CAD",
       requirements: "85%+ in 12th, IELTS 6.5",
-      programs: ["Engineering", "Computer Science", "Business"]
+      programs: ["Engineering", "Computer Science", "Business"],
+      website: "https://www.utoronto.ca"
     },
     {
       name: "University of British Columbia",
@@ -33,7 +33,8 @@ const UniversityMatch = () => {
       ranking: "#2 in Canada",
       tuition: "$42,000 CAD",
       requirements: "82%+ in 12th, IELTS 6.5",
-      programs: ["Medicine", "Engineering", "Arts"]
+      programs: ["Medicine", "Engineering", "Arts"],
+      website: "https://www.ubc.ca"
     },
     // Australia
     {
@@ -42,7 +43,8 @@ const UniversityMatch = () => {
       ranking: "#1 in Australia",
       tuition: "$35,000 AUD",
       requirements: "80%+ in 12th, IELTS 6.5",
-      programs: ["Medicine", "Engineering", "Arts"]
+      programs: ["Medicine", "Engineering", "Arts"],
+      website: "https://www.unimelb.edu.au"
     },
     {
       name: "Australian National University",
@@ -50,7 +52,8 @@ const UniversityMatch = () => {
       ranking: "#2 in Australia",
       tuition: "$38,000 AUD",
       requirements: "85%+ in 12th, IELTS 6.5",
-      programs: ["Science", "Engineering", "Business"]
+      programs: ["Science", "Engineering", "Business"],
+      website: "https://www.anu.edu.au"
     },
     // UK
     {
@@ -59,7 +62,8 @@ const UniversityMatch = () => {
       ranking: "#6 in UK",
       tuition: "£25,000",
       requirements: "85%+ in 12th, IELTS 6.0",
-      programs: ["Engineering", "Business", "Medicine"]
+      programs: ["Engineering", "Business", "Medicine"],
+      website: "https://www.manchester.ac.uk"
     },
     {
       name: "University of Edinburgh",
@@ -67,7 +71,8 @@ const UniversityMatch = () => {
       ranking: "#4 in UK",
       tuition: "£28,000",
       requirements: "88%+ in 12th, IELTS 6.5",
-      programs: ["Medicine", "Engineering", "Arts"]
+      programs: ["Medicine", "Engineering", "Arts"],
+      website: "https://www.ed.ac.uk"
     },
     // Ireland
     {
@@ -76,7 +81,8 @@ const UniversityMatch = () => {
       ranking: "#1 in Ireland",
       tuition: "€20,000",
       requirements: "80%+ in 12th, IELTS 6.5",
-      programs: ["Engineering", "Computer Science", "Medicine"]
+      programs: ["Engineering", "Computer Science", "Medicine"],
+      website: "https://www.tcd.ie"
     },
     {
       name: "University College Dublin",
@@ -84,7 +90,8 @@ const UniversityMatch = () => {
       ranking: "#2 in Ireland",
       tuition: "€18,500",
       requirements: "78%+ in 12th, IELTS 6.0",
-      programs: ["Business", "Engineering", "Arts"]
+      programs: ["Business", "Engineering", "Arts"],
+      website: "https://www.ucd.ie"
     },
     {
       name: "National University of Ireland Galway",
@@ -92,7 +99,8 @@ const UniversityMatch = () => {
       ranking: "#3 in Ireland",
       tuition: "€16,000",
       requirements: "75%+ in 12th, IELTS 6.0",
-      programs: ["Science", "Medicine", "Arts"]
+      programs: ["Science", "Medicine", "Arts"],
+      website: "https://www.nuigalway.ie"
     },
     // USA
     {
@@ -101,7 +109,8 @@ const UniversityMatch = () => {
       ranking: "#2 Public in USA",
       tuition: "$65,000",
       requirements: "90%+ in 12th, TOEFL 100/IELTS 7.0",
-      programs: ["Engineering", "Computer Science", "Business"]
+      programs: ["Engineering", "Computer Science", "Business"],
+      website: "https://www.berkeley.edu"
     },
     {
       name: "University of Michigan",
@@ -109,7 +118,8 @@ const UniversityMatch = () => {
       ranking: "#3 Public in USA",
       tuition: "$60,000",
       requirements: "88%+ in 12th, TOEFL 100/IELTS 7.0",
-      programs: ["Engineering", "Medicine", "Business"]
+      programs: ["Engineering", "Medicine", "Business"],
+      website: "https://umich.edu"
     },
     // Germany
     {
@@ -118,7 +128,8 @@ const UniversityMatch = () => {
       ranking: "#1 in Germany",
       tuition: "€3,000",
       requirements: "85%+ in 12th, IELTS 6.5",
-      programs: ["Engineering", "Computer Science", "Science"]
+      programs: ["Engineering", "Computer Science", "Science"],
+      website: "https://www.tum.de"
     },
     {
       name: "University of Heidelberg",
@@ -126,7 +137,8 @@ const UniversityMatch = () => {
       ranking: "#2 in Germany",
       tuition: "€3,500",
       requirements: "82%+ in 12th, IELTS 6.5",
-      programs: ["Medicine", "Science", "Arts"]
+      programs: ["Medicine", "Science", "Arts"],
+      website: "https://www.uni-heidelberg.de"
     }
   ];
 
@@ -158,6 +170,10 @@ const UniversityMatch = () => {
 
   const handleSearch = () => {
     setSearchClicked(true);
+  };
+
+  const handleViewDetails = (websiteUrl: string) => {
+    window.open(websiteUrl, '_blank', 'noopener,noreferrer');
   };
 
   const filteredUniversities = getFilteredUniversities();
@@ -306,7 +322,12 @@ const UniversityMatch = () => {
                           ))}
                         </div>
                       </div>
-                      <Button className="w-full mt-4" variant="outline">
+                      <Button 
+                        className="w-full mt-4" 
+                        variant="outline"
+                        onClick={() => handleViewDetails(uni.website)}
+                      >
+                        <ExternalLink className="mr-2 h-4 w-4" />
                         View Details & Apply
                       </Button>
                     </CardContent>
