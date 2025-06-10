@@ -114,7 +114,7 @@ const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
             <X className="h-4 w-4" />
           </Button>
         ),
-        Navigation: ({ currentStep, stepsLength, setCurrentStep, setIsOpen }) => (
+        Navigation: ({ currentStep, steps, setCurrentStep, setIsOpen }) => (
           <div className="flex items-center justify-between mt-4 pt-4 border-t">
             <Button
               onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
@@ -126,15 +126,15 @@ const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
               Previous
             </Button>
             <span className="text-sm text-muted-foreground">
-              {currentStep + 1} of {stepsLength}
+              {currentStep + 1} of {steps.length}
             </span>
-            {currentStep === stepsLength - 1 ? (
+            {currentStep === steps.length - 1 ? (
               <Button onClick={() => setIsOpen(false)} size="sm">
                 Finish Tour
               </Button>
             ) : (
               <Button
-                onClick={() => setCurrentStep(Math.min(stepsLength - 1, currentStep + 1))}
+                onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
                 size="sm"
               >
                 Next
