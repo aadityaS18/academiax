@@ -260,67 +260,61 @@ const UniversityMatch = () => {
     return normalized;
   };
 
-  // Get country-specific limits
-  const getCountryLimit = (country: string) => {
-    const normalizedCountry = country.toLowerCase();
-    
-    if (normalizedCountry === 'usa' || normalizedCountry === 'canada') {
-      return { min: 23, max: 50 };
-    }
-    if (normalizedCountry === 'uk' || normalizedCountry === 'germany') {
-      return { min: 1, max: 20 };
-    }
-    if (normalizedCountry === 'ireland') {
-      return { min: 1, max: 5 };
-    }
-    if (normalizedCountry === 'australia') {
-      return { min: 1, max: 15 };
-    }
-    
-    return { min: 1, max: 10 }; // Default for other countries
-  };
-
   const getFilteredUniversities = () => {
+    console.log("Search clicked:", searchClicked);
+    console.log("Profile:", profile);
+    
     if (!searchClicked) {
       return allUniversities.slice(0, 3); // Show first 3 by default
     }
 
     let filtered = allUniversities;
+    console.log("Total universities before filtering:", filtered.length);
 
     // Filter by country if specified
     if (profile.country.trim()) {
       const searchCountry = normalizeCountryName(profile.country);
+      console.log("Normalized search country:", searchCountry);
       
       filtered = filtered.filter(uni => {
         const uniCountry = normalizeCountryName(uni.country);
-        return uniCountry === searchCountry;
+        const matches = uniCountry === searchCountry;
+        if (matches) {
+          console.log("Country match found:", uni.name, uni.country);
+        }
+        return matches;
       });
 
-      // Apply country-specific ranking limits
-      if (filtered.length > 0) {
-        const countryLimits = getCountryLimit(searchCountry);
-        filtered = filtered.filter(uni => 
-          uni.globalRank >= countryLimits.min && uni.globalRank <= countryLimits.max
-        );
-      }
+      console.log("Universities after country filtering:", filtered.length);
     }
 
     // Filter by field if specified
     if (profile.field.trim()) {
-      filtered = filtered.filter(uni =>
-        uni.programs.some(program =>
-          program.toLowerCase().includes(profile.field.toLowerCase())
-        )
-      );
+      const searchField = profile.field.toLowerCase();
+      console.log("Searching for field:", searchField);
+      
+      filtered = filtered.filter(uni => {
+        const hasField = uni.programs.some(program =>
+          program.toLowerCase().includes(searchField)
+        );
+        if (hasField) {
+          console.log("Field match found:", uni.name, uni.programs);
+        }
+        return hasField;
+      });
+
+      console.log("Universities after field filtering:", filtered.length);
     }
 
     // Sort by global ranking
     filtered.sort((a, b) => a.globalRank - b.globalRank);
 
+    console.log("Final filtered universities:", filtered.length);
     return filtered.length > 0 ? filtered : [];
   };
 
   const handleSearch = () => {
+    console.log("Search button clicked");
     setSearchClicked(true);
   };
 
