@@ -1,7 +1,6 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, GraduationCap, Calculator, Globe, Star, Users, Brain, CheckCircle, TrendingUp, Award, BookOpen } from "lucide-react";
+import { ArrowRight, GraduationCap, Calculator, Globe, Star, Users, Brain, CheckCircle, TrendingUp, Award, BookOpen, Shield, Clock, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -58,27 +57,30 @@ const Index = () => {
     { number: "95%", label: "Success Rate", icon: <TrendingUp className="h-6 w-6" /> }
   ];
 
-  const testimonials = [
+  const whyChooseUs = [
     {
-      name: "Priya Sharma",
-      location: "Mumbai, India",
-      university: "Stanford University",
-      text: "StudyAbroad helped me navigate the complex application process. The SOP assistant was a game-changer!",
-      avatar: "PS"
+      icon: <Shield className="h-12 w-12 text-primary" />,
+      title: "Trusted Platform",
+      description: "Verified information from official university sources and real student experiences.",
+      highlight: "100% Authentic Data"
     },
     {
-      name: "Rahul Patel",
-      location: "Delhi, India",
-      university: "MIT",
-      text: "The budget calculator helped me plan my finances perfectly. Now I'm studying at my dream university!",
-      avatar: "RP"
+      icon: <Clock className="h-12 w-12 text-primary" />,
+      title: "Save Time",
+      description: "Streamlined process that reduces application time by 60% compared to traditional methods.",
+      highlight: "60% Faster Process"
     },
     {
-      name: "Ananya Singh",
-      location: "Bangalore, India",
-      university: "Oxford University",
-      text: "The university matching feature found perfect programs I never knew existed. Highly recommended!",
-      avatar: "AS"
+      icon: <Heart className="h-12 w-12 text-primary" />,
+      title: "Personalized Support",
+      description: "Dedicated guidance tailored to your academic background and career aspirations.",
+      highlight: "1-on-1 Mentorship"
+    },
+    {
+      icon: <Award className="h-12 w-12 text-primary" />,
+      title: "Proven Results",
+      description: "Track record of successful admissions to top universities worldwide.",
+      highlight: "95% Success Rate"
     }
   ];
 
@@ -239,28 +241,25 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Why Students Choose Us Section */}
       <section className="py-16 px-4 bg-muted/50">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Success Stories</h2>
-            <p className="text-muted-foreground text-lg">Hear from students who achieved their dreams</p>
+            <h2 className="text-3xl font-bold mb-4">Why Students Choose StudyAbroad</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Discover what makes us the preferred choice for thousands of students planning their international education journey
+            </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {whyChooseUs.map((item, index) => (
+              <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover-scale">
                 <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold mr-4">
-                      {testimonial.avatar}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">{testimonial.name}</h4>
-                      <p className="text-sm text-muted-foreground">{testimonial.location}</p>
-                    </div>
+                  <div className="flex justify-center mb-4">{item.icon}</div>
+                  <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm mb-3">{item.description}</p>
+                  <div className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">
+                    {item.highlight}
                   </div>
-                  <p className="text-muted-foreground mb-4">"{testimonial.text}"</p>
-                  <div className="text-sm font-medium text-primary">Now studying at {testimonial.university}</div>
                 </CardContent>
               </Card>
             ))}
@@ -283,7 +282,7 @@ const Index = () => {
                 <Button size="lg" variant="secondary" asChild className="text-lg px-8 hover-scale">
                   <Link to="/get-started">Get Started Today</Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                <Button size="lg" variant="outline" asChild className="text-lg px-8 bg-primary-foreground text-primary border-primary-foreground hover:bg-primary-foreground/90 hover:text-primary">
                   <Link to="/university-match">Explore Universities</Link>
                 </Button>
               </div>
