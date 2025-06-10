@@ -114,7 +114,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <GraduationCap className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-primary">StudyAbroad</span>
+              <span className="text-2xl font-bold text-primary">AcademiaX</span>
             </div>
             <nav className="hidden md:flex items-center space-x-6">
               <Link to="/university-match" className="text-muted-foreground hover:text-primary transition-colors">
@@ -225,7 +225,7 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-6">Why Choose StudyAbroad?</h2>
+              <h2 className="text-3xl font-bold mb-6">Why Choose AcademiaX?</h2>
               <p className="text-muted-foreground text-lg mb-8">
                 We provide comprehensive support throughout your study abroad journey, from initial planning to university acceptance.
               </p>
@@ -268,7 +268,7 @@ const Index = () => {
       <section className="py-16 px-4 bg-muted/50">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Students Choose StudyAbroad</h2>
+            <h2 className="text-3xl font-bold mb-4">Why Students Choose AcademiaX</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Discover what makes us the preferred choice for thousands of students planning their international education journey
             </p>

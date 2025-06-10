@@ -8,7 +8,7 @@ const SOPHeader = () => {
       <div className="container mx-auto px-4 py-4">
         <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
           <GraduationCap className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold text-primary">StudyAbroad</span>
+          <span className="text-2xl font-bold text-primary">AcademiaX</span>
         </Link>
       </div>
     </header>
