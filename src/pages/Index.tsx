@@ -200,7 +200,18 @@ const Index = () => {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <Card key={index} className={`hover:shadow-lg transition-all duration-300 cursor-pointer group hover-scale ${feature.color}`}>
+              <Card 
+                key={index} 
+                className={`hover:shadow-lg transition-all duration-300 cursor-pointer group hover-scale ${feature.color}`}
+                data-tour={
+                  feature.title === "University Matching" ? "university-match" :
+                  feature.title === "Budget Calculator" ? "budget-calculator" :
+                  feature.title === "SOP Assistant" ? "sop-assistant" :
+                  feature.title === "Application Tracker" ? "application-tracker" :
+                  feature.title === "Country Guide" ? "country-guide" :
+                  undefined
+                }
+              >
                 <Link to={feature.link}>
                   <CardHeader>
                     <div className="mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
