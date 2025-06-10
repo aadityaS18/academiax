@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ArrowRight, GraduationCap, Calculator, Globe, Star, Users, Brain, CheckCircle, TrendingUp, Award, BookOpen, Shield, Clock, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -52,7 +53,17 @@ const Index = () => {
 
   const stats = [
     { number: "200+", label: "Universities Covered", icon: <GraduationCap className="h-6 w-6" /> },
-    { number: "4", label: "Top Countries", icon: <Globe className="h-6 w-6" />, description: "US, Canada, Ireland, Australia" }
+    { 
+      number: "4", 
+      label: "Top Countries", 
+      icon: <Globe className="h-6 w-6" />, 
+      countries: [
+        { name: "United States", flag: "🇺🇸" },
+        { name: "Canada", flag: "🇨🇦" },
+        { name: "Ireland", flag: "🇮🇪" },
+        { name: "Australia", flag: "🇦🇺" }
+      ]
+    }
   ];
 
   const whyChooseUs = [
@@ -150,15 +161,22 @@ const Index = () => {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 max-w-4xl mx-auto">
             {stats.map((stat, index) => (
               <Card key={index} className="border-0 bg-card/50 backdrop-blur-sm hover-scale">
                 <CardContent className="p-6 text-center">
                   <div className="flex justify-center mb-2 text-primary">{stat.icon}</div>
                   <div className="text-3xl font-bold text-primary mb-1">{stat.number}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                  {stat.description && (
-                    <div className="text-xs text-muted-foreground mt-1">{stat.description}</div>
+                  <div className="text-sm text-muted-foreground mb-3">{stat.label}</div>
+                  {stat.countries && (
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {stat.countries.map((country, countryIndex) => (
+                        <Badge key={countryIndex} variant="secondary" className="text-xs px-2 py-1">
+                          <span className="mr-1">{country.flag}</span>
+                          {country.name}
+                        </Badge>
+                      ))}
+                    </div>
                   )}
                 </CardContent>
               </Card>
