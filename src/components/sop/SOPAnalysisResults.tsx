@@ -142,7 +142,7 @@ const SOPAnalysisResults = ({ feedback }: SOPAnalysisResultsProps) => {
             ))}
           </ul>
         </CardContent>
-      )}
+      </Card>
 
       {/* Actionable Suggestions */}
       <Card className="border-blue-200">
@@ -162,7 +162,7 @@ const SOPAnalysisResults = ({ feedback }: SOPAnalysisResultsProps) => {
             ))}
           </ul>
         </CardContent>
-      )}
+      </Card>
     </div>
   );
 };
