@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -514,5 +515,3 @@ My goal is to return to my home country and establish a social impact consulting
 };
 
 export default SOPAssistant;
-
-}
