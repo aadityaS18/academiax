@@ -71,13 +71,13 @@ const UniversityMatch = () => {
     { id: 63, name: "National University of Ireland Galway", country: "Ireland", city: "Galway", globalRank: 4, programs: ["Medicine", "Engineering", "Arts", "Science"], tuitionFee: "€18,000/year", admissionRate: "80%", satScore: "1200-1350", ieltsScore: "6.0+", toeflScore: "80+" },
   ];
 
-  // Test preparation resources
+  // Test preparation resources with book links
   const testPrepResources = {
     IELTS: {
       books: [
-        "Cambridge IELTS 17 Academic Student's Book",
-        "The Official Cambridge Guide to IELTS",
-        "Barron's IELTS Superpack"
+        { title: "Cambridge IELTS 17 Academic Student's Book", link: "https://www.amazon.com/Cambridge-IELTS-Academic-Students-Answers/dp/1316637356" },
+        { title: "The Official Cambridge Guide to IELTS", link: "https://www.amazon.com/Official-Cambridge-Guide-IELTS-Students/dp/1107620694" },
+        { title: "Barron's IELTS Superpack", link: "https://www.amazon.com/Barrons-IELTS-Superpack-Audio-Online/dp/1438075219" }
       ],
       youtubeChannels: [
         { name: "IELTS Liz", url: "https://youtube.com/@IELTSLiz" },
@@ -87,9 +87,9 @@ const UniversityMatch = () => {
     },
     SAT: {
       books: [
-        "The Official SAT Study Guide 2024",
-        "College Board SAT Prep Plus 2024",
-        "Barron's SAT 29th Edition"
+        { title: "The Official SAT Study Guide 2024", link: "https://www.amazon.com/Official-SAT-Study-Guide-2024/dp/1457315645" },
+        { title: "College Board SAT Prep Plus 2024", link: "https://www.amazon.com/Kaplan-SAT-Prep-Plus-2024/dp/1506285244" },
+        { title: "Barron's SAT 29th Edition", link: "https://www.amazon.com/Barrons-SAT-29th-Sharon-Weiner/dp/1506264328" }
       ],
       youtubeChannels: [
         { name: "Khan Academy SAT", url: "https://youtube.com/@khanacademy" },
@@ -99,9 +99,9 @@ const UniversityMatch = () => {
     },
     TOEFL: {
       books: [
-        "The Official Guide to the TOEFL iBT Test",
-        "Barron's TOEFL iBT Superpack",
-        "Cambridge Preparation for the TOEFL Test"
+        { title: "The Official Guide to the TOEFL iBT Test", link: "https://www.amazon.com/Official-Guide-TOEFL-Test-Sixth/dp/1260011216" },
+        { title: "Barron's TOEFL iBT Superpack", link: "https://www.amazon.com/Barrons-TOEFL-iBT-Superpack-Audio/dp/1438075170" },
+        { title: "Cambridge Preparation for the TOEFL Test", link: "https://www.amazon.com/Cambridge-Preparation-TOEFL-Test-Book/dp/0521755875" }
       ],
       youtubeChannels: [
         { name: "TOEFL TV Official", url: "https://youtube.com/@TOEFLTV" },
@@ -111,9 +111,9 @@ const UniversityMatch = () => {
     },
     GRE: {
       books: [
-        "The Official Guide to the GRE General Test",
-        "Manhattan Prep GRE Set of 8 Strategy Guides",
-        "Barron's GRE 23rd Edition"
+        { title: "The Official Guide to the GRE General Test", link: "https://www.amazon.com/Official-Guide-GRE-General-Test/dp/1259862410" },
+        { title: "Manhattan Prep GRE Set of 8 Strategy Guides", link: "https://www.amazon.com/Manhattan-Prep-Strategy-Guides-Instructional/dp/1506232396" },
+        { title: "Barron's GRE 23rd Edition", link: "https://www.amazon.com/Barrons-GRE-23rd-Sharon-Weiner/dp/1506264328" }
       ],
       youtubeChannels: [
         { name: "GregMat", url: "https://youtube.com/@GregMat" },
@@ -405,7 +405,14 @@ const UniversityMatch = () => {
                         {resources.books.map((book, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                            <span className="text-sm">{book}</span>
+                            <a
+                              href={book.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm hover:text-primary transition-colors hover:underline"
+                            >
+                              {book.title}
+                            </a>
                           </li>
                         ))}
                       </ul>
