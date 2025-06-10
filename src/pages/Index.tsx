@@ -1,8 +1,7 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, GraduationCap, Calculator, Globe, Star, Brain, CheckCircle, TrendingUp, Award, BookOpen, Shield, Clock, Heart } from "lucide-react";
+import { ArrowRight, GraduationCap, Calculator, Globe, Star, Brain, CheckCircle, TrendingUp, Award, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -61,33 +60,6 @@ const Index = () => {
         { name: "Netherlands", flag: "🇳🇱" },
         { name: "France", flag: "🇫🇷" }
       ]
-    }
-  ];
-
-  const whyChooseUs = [
-    {
-      icon: <Shield className="h-12 w-12 text-primary" />,
-      title: "Trusted Platform",
-      description: "Verified information from official university sources and real student experiences.",
-      highlight: "100% Authentic Data"
-    },
-    {
-      icon: <Clock className="h-12 w-12 text-primary" />,
-      title: "Save Time",
-      description: "Streamlined process that reduces application time by 60% compared to traditional methods.",
-      highlight: "60% Faster Process"
-    },
-    {
-      icon: <Heart className="h-12 w-12 text-primary" />,
-      title: "Personalized Support",
-      description: "Dedicated guidance tailored to your academic background and career aspirations.",
-      highlight: "1-on-1 Mentorship"
-    },
-    {
-      icon: <Award className="h-12 w-12 text-primary" />,
-      title: "Proven Results",
-      description: "Track record of successful admissions to top universities worldwide.",
-      highlight: "95% Success Rate"
     }
   ];
 
@@ -265,32 +237,6 @@ const Index = () => {
                 <p className="text-sm opacity-90">Focused approach to maximize your admission chances</p>
               </Card>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Students Choose Us Section */}
-      <section className="py-16 px-4 bg-muted/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Students Choose AcademiaX</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Discover what makes us the preferred choice for thousands of students planning their international education journey
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {whyChooseUs.map((item, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover-scale">
-                <CardContent className="p-6">
-                  <div className="flex justify-center mb-4">{item.icon}</div>
-                  <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                  <p className="text-muted-foreground text-sm mb-3">{item.description}</p>
-                  <div className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">
-                    {item.highlight}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
           </div>
         </div>
       </section>
