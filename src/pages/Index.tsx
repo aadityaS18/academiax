@@ -1,7 +1,8 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, GraduationCap, Calculator, Globe, Star, Users, Brain, CheckCircle, TrendingUp, Award, BookOpen, Shield, Clock, Heart } from "lucide-react";
+import { ArrowRight, GraduationCap, Calculator, Globe, Star, Brain, CheckCircle, TrendingUp, Award, BookOpen, Shield, Clock, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -41,13 +42,6 @@ const Index = () => {
       description: "Keep track of your university applications, deadlines, and requirements.",
       link: "/application-tracker",
       color: "bg-yellow-50 dark:bg-yellow-900/20"
-    },
-    {
-      icon: <Users className="h-8 w-8 text-primary" />,
-      title: "Community",
-      description: "Connect with other students and get advice from those who've been there.",
-      link: "/community",
-      color: "bg-pink-50 dark:bg-pink-900/20"
     }
   ];
 
@@ -266,9 +260,9 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground">Monitor your application status and deadlines</p>
               </Card>
               <Card className="p-6 bg-primary text-primary-foreground">
-                <Users className="h-8 w-8 mb-4" />
-                <h3 className="font-bold mb-2">Community Support</h3>
-                <p className="text-sm opacity-90">Connect with peers and mentors in our community</p>
+                <Award className="h-8 w-8 mb-4" />
+                <h3 className="font-bold mb-2">Success-Oriented</h3>
+                <p className="text-sm opacity-90">Focused approach to maximize your admission chances</p>
               </Card>
             </div>
           </div>
