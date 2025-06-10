@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,8 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Brain, GraduationCap, CheckCircle, AlertTriangle, FileText, Shield, Eye, BookOpen } from "lucide-react";
+import { Brain, GraduationCap, CheckCircle, AlertTriangle, FileText, Shield, Eye, BookOpen, TrendingUp, Target, Lightbulb } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { Link } from "react-router-dom";
 
 const SOPAssistant = () => {
   const [sopText, setSopText] = useState("");
@@ -33,29 +33,45 @@ const SOPAssistant = () => {
 
     setIsAnalyzing(true);
     
-    // Simulate AI analysis
+    // Simulate AI analysis with more detailed feedback
     setTimeout(() => {
       const score = Math.max(60, Math.min(95, 75 + Math.floor(Math.random() * 20)));
       setFeedback({
         score,
+        breakdown: {
+          introduction: Math.floor(score * 0.15 + Math.random() * 10),
+          academicBackground: Math.floor(score * 0.2 + Math.random() * 15),
+          professionalExperience: Math.floor(score * 0.25 + Math.random() * 15),
+          programFit: Math.floor(score * 0.2 + Math.random() * 15),
+          futureGoals: Math.floor(score * 0.2 + Math.random() * 15)
+        },
         strengths: [
           "Clear career goals mentioned",
-          "Good academic background description",
+          "Good academic background description", 
           "Specific program choice reasoning",
-          "Professional tone maintained"
+          "Professional tone maintained",
+          "Relevant experiences highlighted"
         ],
         improvements: [
           "Add more personal experiences and stories",
           "Strengthen the connection between past experiences and future goals",
           "Include specific details about the university and program",
-          "Better conclusion with clear next steps"
+          "Better conclusion with clear next steps",
+          "Use more specific examples to demonstrate passion"
         ],
+        criticalIssues: score < 70 ? [
+          "Lacks specific examples and concrete achievements",
+          "Generic statements without personalization",
+          "Weak connection between background and program choice"
+        ] : [],
         suggestions: [
           "Start with a compelling personal anecdote",
           "Use specific examples to demonstrate your passion",
           "Research and mention specific professors or research opportunities",
-          "Connect your background to your future aspirations more clearly"
-        ]
+          "Connect your background to your future aspirations more clearly",
+          "Quantify your achievements with numbers and results"
+        ],
+        grade: score >= 90 ? 'A' : score >= 80 ? 'B' : score >= 70 ? 'C' : score >= 60 ? 'D' : 'F'
       });
       setIsAnalyzing(false);
     }, 2000);
@@ -180,13 +196,13 @@ My goal is to return to my home country and establish a social impact consulting
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      {/* Header with proper navigation */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <GraduationCap className="h-8 w-8 text-primary" />
             <span className="text-2xl font-bold text-primary">StudyAbroad</span>
-          </div>
+          </Link>
         </div>
       </header>
 
@@ -405,21 +421,91 @@ My goal is to return to my home country and establish a social impact consulting
             </Card>
           </div>
 
-          {/* Feedback */}
+          {/* Enhanced Feedback Section */}
           <div>
             {feedback ? (
               <div className="space-y-6">
+                {/* Overall Score Card */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Analysis Results</CardTitle>
-                    <div className="flex items-center space-x-2">
-                      <div className="text-2xl font-bold text-primary">{feedback.score}/100</div>
-                      <div className="text-sm text-muted-foreground">Overall Score</div>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Analysis Results</span>
+                      <div className={`text-3xl font-bold px-4 py-2 rounded-lg ${
+                        feedback.grade === 'A' ? 'bg-green-100 text-green-800' :
+                        feedback.grade === 'B' ? 'bg-blue-100 text-blue-800' :
+                        feedback.grade === 'C' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {feedback.grade}
+                      </div>
+                    </CardTitle>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <TrendingUp className="h-5 w-5 text-primary" />
+                        <span className="text-2xl font-bold text-primary">{feedback.score}/100</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {feedback.score >= 90 ? 'Excellent' : 
+                         feedback.score >= 80 ? 'Very Good' :
+                         feedback.score >= 70 ? 'Good' :
+                         feedback.score >= 60 ? 'Needs Improvement' : 'Poor'}
+                      </div>
                     </div>
                   </CardHeader>
                 </Card>
 
+                {/* Detailed Breakdown */}
                 <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Target className="mr-2 h-5 w-5" />
+                      Section-wise Breakdown
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {Object.entries(feedback.breakdown).map(([section, score]: [string, any]) => (
+                        <div key={section} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                          <span className="font-medium capitalize">
+                            {section.replace(/([A-Z])/g, ' $1').trim()}
+                          </span>
+                          <div className="flex items-center space-x-2">
+                            <div className={`w-16 h-2 rounded-full ${
+                              score >= 80 ? 'bg-green-500' :
+                              score >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                            }`} style={{ width: `${score}%`, maxWidth: '64px' }} />
+                            <span className="font-bold min-w-[40px] text-right">{score}/100</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Critical Issues (if any) */}
+                {feedback.criticalIssues && feedback.criticalIssues.length > 0 && (
+                  <Card className="border-red-200">
+                    <CardHeader>
+                      <CardTitle className="flex items-center text-red-600">
+                        <AlertTriangle className="mr-2 h-5 w-5" />
+                        Critical Issues to Address
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {feedback.criticalIssues.map((issue: string, index: number) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-red-700">{issue}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Strengths */}
+                <Card className="border-green-200">
                   <CardHeader>
                     <CardTitle className="flex items-center text-green-600">
                       <CheckCircle className="mr-2 h-5 w-5" />
@@ -438,9 +524,13 @@ My goal is to return to my home country and establish a social impact consulting
                   </CardContent>
                 </Card>
 
-                <Card>
+                {/* Areas for Improvement */}
+                <Card className="border-orange-200">
                   <CardHeader>
-                    <CardTitle className="text-orange-600">Areas for Improvement</CardTitle>
+                    <CardTitle className="flex items-center text-orange-600">
+                      <TrendingUp className="mr-2 h-5 w-5" />
+                      Areas for Improvement
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
@@ -454,15 +544,19 @@ My goal is to return to my home country and establish a social impact consulting
                   </CardContent>
                 </Card>
 
-                <Card>
+                {/* Actionable Suggestions */}
+                <Card className="border-blue-200">
                   <CardHeader>
-                    <CardTitle className="text-blue-600">Suggestions</CardTitle>
+                    <CardTitle className="flex items-center text-blue-600">
+                      <Lightbulb className="mr-2 h-5 w-5" />
+                      Actionable Suggestions
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
                       {feedback.suggestions.map((suggestion: string, index: number) => (
                         <li key={index} className="flex items-start space-x-2">
-                          <Brain className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                          <Lightbulb className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
                           <span className="text-sm">{suggestion}</span>
                         </li>
                       ))}
