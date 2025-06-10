@@ -10,6 +10,7 @@ import UniversityMatch from "./pages/UniversityMatch";
 import BudgetCalculator from "./pages/BudgetCalculator";
 import SOPAssistant from "./pages/SOPAssistant";
 import ApplicationTracker from "./pages/ApplicationTracker";
+import CountryGuide from "./pages/CountryGuide";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/budget-calculator" element={<BudgetCalculator />} />
           <Route path="/sop-assistant" element={<SOPAssistant />} />
           <Route path="/application-tracker" element={<ApplicationTracker />} />
+          <Route path="/country-guide" element={<CountryGuide />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
