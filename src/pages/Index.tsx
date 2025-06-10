@@ -54,14 +54,18 @@ const Index = () => {
   const stats = [
     { number: "200+", label: "Universities Covered", icon: <GraduationCap className="h-6 w-6" /> },
     { 
-      number: "4", 
+      number: "8", 
       label: "Top Countries", 
       icon: <Globe className="h-6 w-6" />, 
       countries: [
         { name: "United States", flag: "🇺🇸" },
         { name: "Canada", flag: "🇨🇦" },
+        { name: "United Kingdom", flag: "🇬🇧" },
         { name: "Ireland", flag: "🇮🇪" },
-        { name: "Australia", flag: "🇦🇺" }
+        { name: "Australia", flag: "🇦🇺" },
+        { name: "Germany", flag: "🇩🇪" },
+        { name: "Netherlands", flag: "🇳🇱" },
+        { name: "France", flag: "🇫🇷" }
       ]
     }
   ];
