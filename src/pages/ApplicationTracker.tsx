@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { GraduationCap, Star, CheckCircle, Clock, AlertTriangle, Calendar } from "lucide-react";
 
 const ApplicationTracker = () => {
@@ -13,6 +14,7 @@ const ApplicationTracker = () => {
       id: 1,
       university: "University of Toronto",
       program: "Computer Science",
+      applicationType: "Regular Decision",
       deadline: "2024-01-15",
       status: "In Progress",
       requirements: {
@@ -27,6 +29,7 @@ const ApplicationTracker = () => {
       id: 2,
       university: "University of Melbourne",
       program: "Engineering",
+      applicationType: "Regular Decision",
       deadline: "2024-02-01",
       status: "Submitted",
       requirements: {
@@ -41,6 +44,7 @@ const ApplicationTracker = () => {
       id: 3,
       university: "MIT",
       program: "Computer Science",
+      applicationType: "Early Action",
       deadline: "2024-01-01",
       status: "Waitlisted",
       requirements: {
@@ -49,6 +53,36 @@ const ApplicationTracker = () => {
         lor: true,
         test_scores: true,
         portfolio: true
+      }
+    },
+    {
+      id: 4,
+      university: "Stanford University",
+      program: "Computer Science",
+      applicationType: "Regular Decision",
+      deadline: "2024-01-05",
+      status: "In Progress",
+      requirements: {
+        sop: false,
+        transcripts: true,
+        lor: false,
+        test_scores: true,
+        portfolio: true
+      }
+    },
+    {
+      id: 5,
+      university: "Harvard University",
+      program: "Engineering",
+      applicationType: "Early Decision",
+      deadline: "2024-01-10",
+      status: "In Progress",
+      requirements: {
+        sop: true,
+        transcripts: false,
+        lor: true,
+        test_scores: true,
+        portfolio: false
       }
     }
   ]);
@@ -70,6 +104,16 @@ const ApplicationTracker = () => {
       case "Accepted": return "bg-green-100 text-green-800";
       case "Rejected": return "bg-red-100 text-red-800";
       case "Waitlisted": return "bg-purple-100 text-purple-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getApplicationTypeColor = (type: string) => {
+    switch (type) {
+      case "Early Action": return "bg-green-100 text-green-800";
+      case "Early Decision": return "bg-blue-100 text-blue-800";
+      case "Regular Decision": return "bg-gray-100 text-gray-800";
+      case "Rolling Admission": return "bg-orange-100 text-orange-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
@@ -139,10 +183,10 @@ const ApplicationTracker = () => {
     return urgencyOrder[timeA.urgency] - urgencyOrder[timeB.urgency];
   });
 
-  const urgentApplications = applications.filter(app => {
-    const timeInfo = getTimeUntilDeadline(app.deadline);
-    return timeInfo.urgency === "critical" || timeInfo.urgency === "expired";
-  });
+  // Calculate stats by application type
+  const earlyActionApps = applications.filter(app => app.applicationType === "Early Action");
+  const earlyDecisionApps = applications.filter(app => app.applicationType === "Early Decision");
+  const regularDecisionApps = applications.filter(app => app.applicationType === "Regular Decision");
 
   return (
     <div className="min-h-screen bg-background">
@@ -171,58 +215,30 @@ const ApplicationTracker = () => {
           <p className="text-muted-foreground">Keep track of your university applications and deadlines</p>
         </div>
 
-        {/* Urgent Alerts */}
-        {urgentApplications.length > 0 && (
-          <Card className="mb-6 border-red-200 bg-red-50">
-            <CardHeader>
-              <CardTitle className="text-red-800 flex items-center">
-                <AlertTriangle className="h-5 w-5 mr-2" />
-                Urgent Deadlines
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {urgentApplications.map(app => {
-                  const timeInfo = getTimeUntilDeadline(app.deadline);
-                  return (
-                    <div key={app.id} className="flex justify-between items-center p-2 bg-white rounded">
-                      <span className="font-medium">{app.university} - {app.program}</span>
-                      <Badge className={getUrgencyBadge(timeInfo.urgency)}>
-                        {getUrgencyIcon(timeInfo.urgency)}
-                        <span className="ml-1">{timeInfo.text}</span>
-                      </Badge>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Summary Cards */}
         <div className="grid md:grid-cols-4 gap-4 mb-8">
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-primary">3</div>
+              <div className="text-2xl font-bold text-primary">{applications.length}</div>
               <div className="text-sm text-muted-foreground">Total Applications</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-yellow-600">1</div>
-              <div className="text-sm text-muted-foreground">In Progress</div>
+              <div className="text-2xl font-bold text-green-600">{earlyActionApps.length}</div>
+              <div className="text-sm text-muted-foreground">Early Action</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-blue-600">1</div>
-              <div className="text-sm text-muted-foreground">Submitted</div>
+              <div className="text-2xl font-bold text-blue-600">{earlyDecisionApps.length}</div>
+              <div className="text-sm text-muted-foreground">Early Decision</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-red-600">{urgentApplications.length}</div>
-              <div className="text-sm text-muted-foreground">Urgent Deadlines</div>
+              <div className="text-2xl font-bold text-gray-600">{regularDecisionApps.length}</div>
+              <div className="text-sm text-muted-foreground">Regular Decision</div>
             </CardContent>
           </Card>
         </div>
@@ -243,6 +259,9 @@ const ApplicationTracker = () => {
                       <CardDescription className="text-base mt-1">{app.program}</CardDescription>
                     </div>
                     <div className="flex space-x-2">
+                      <Badge className={getApplicationTypeColor(app.applicationType)}>
+                        {app.applicationType}
+                      </Badge>
                       <Badge className={getStatusColor(app.status)}>
                         {app.status}
                       </Badge>
