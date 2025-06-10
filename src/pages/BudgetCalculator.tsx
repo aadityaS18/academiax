@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calculator, GraduationCap, ExternalLink, Award, Globe, Users } from "lucide-react";
 
 const BudgetCalculator = () => {
@@ -16,12 +17,40 @@ const BudgetCalculator = () => {
     insurance: ""
   });
 
+  const [currency, setCurrency] = useState("INR");
+
+  const currencies = [
+    { code: "INR", symbol: "₹", name: "Indian Rupee", placeholder: "e.g., 2500000 (25 Lakhs)" },
+    { code: "USD", symbol: "$", name: "US Dollar", placeholder: "e.g., 30000" },
+    { code: "GBP", symbol: "£", name: "British Pound", placeholder: "e.g., 25000" },
+    { code: "EUR", symbol: "€", name: "Euro", placeholder: "e.g., 28000" },
+    { code: "CAD", symbol: "C$", name: "Canadian Dollar", placeholder: "e.g., 35000" },
+    { code: "AUD", symbol: "A$", name: "Australian Dollar", placeholder: "e.g., 40000" },
+    { code: "JPY", symbol: "¥", name: "Japanese Yen", placeholder: "e.g., 3500000" },
+  ];
+
+  const selectedCurrency = currencies.find(c => c.code === currency) || currencies[0];
+
   const calculateTotal = () => {
     const values = Object.values(expenses).map(val => parseFloat(val) || 0);
     return values.reduce((sum, val) => sum + val, 0);
   };
 
   const total = calculateTotal();
+
+  const formatCurrency = (amount) => {
+    if (currency === "INR") {
+      return `${selectedCurrency.symbol}${amount.toLocaleString()}`;
+    }
+    return `${selectedCurrency.symbol}${amount.toLocaleString()}`;
+  };
+
+  const getConversionNote = () => {
+    if (currency === "INR") {
+      return `Approximately ₹${(total / 100000).toFixed(1)} Lakhs per year`;
+    }
+    return `Total annual cost in ${selectedCurrency.name}`;
+  };
 
   const scholarships = [
     {
@@ -141,15 +170,30 @@ const BudgetCalculator = () => {
                   <Calculator className="mr-2 h-5 w-5" />
                   Annual Expenses
                 </CardTitle>
-                <CardDescription>Enter your estimated annual costs in your local currency</CardDescription>
+                <CardDescription>Enter your estimated annual costs in your preferred currency</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="currency">Currency</Label>
+                  <Select value={currency} onValueChange={setCurrency}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select currency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencies.map((curr) => (
+                        <SelectItem key={curr.code} value={curr.code}>
+                          {curr.symbol} {curr.name} ({curr.code})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div>
                   <Label htmlFor="tuition">Tuition Fees</Label>
                   <Input
                     id="tuition"
                     type="number"
-                    placeholder="e.g., 2500000 (25 Lakhs)"
+                    placeholder={selectedCurrency.placeholder}
                     value={expenses.tuition}
                     onChange={(e) => setExpenses({...expenses, tuition: e.target.value})}
                   />
@@ -159,7 +203,7 @@ const BudgetCalculator = () => {
                   <Input
                     id="accommodation"
                     type="number"
-                    placeholder="e.g., 800000 (8 Lakhs)"
+                    placeholder={`e.g., ${currency === 'INR' ? '800000 (8 Lakhs)' : currency === 'USD' ? '12000' : currency === 'GBP' ? '10000' : '15000'}`}
                     value={expenses.accommodation}
                     onChange={(e) => setExpenses({...expenses, accommodation: e.target.value})}
                   />
@@ -169,7 +213,7 @@ const BudgetCalculator = () => {
                   <Input
                     id="food"
                     type="number"
-                    placeholder="e.g., 300000 (3 Lakhs)"
+                    placeholder={`e.g., ${currency === 'INR' ? '300000 (3 Lakhs)' : currency === 'USD' ? '4000' : currency === 'GBP' ? '3500' : '5000'}`}
                     value={expenses.food}
                     onChange={(e) => setExpenses({...expenses, food: e.target.value})}
                   />
@@ -179,7 +223,7 @@ const BudgetCalculator = () => {
                   <Input
                     id="transport"
                     type="number"
-                    placeholder="e.g., 150000 (1.5 Lakhs)"
+                    placeholder={`e.g., ${currency === 'INR' ? '150000 (1.5 Lakhs)' : currency === 'USD' ? '2000' : currency === 'GBP' ? '1500' : '2500'}`}
                     value={expenses.transport}
                     onChange={(e) => setExpenses({...expenses, transport: e.target.value})}
                   />
@@ -189,7 +233,7 @@ const BudgetCalculator = () => {
                   <Input
                     id="books"
                     type="number"
-                    placeholder="e.g., 100000 (1 Lakh)"
+                    placeholder={`e.g., ${currency === 'INR' ? '100000 (1 Lakh)' : currency === 'USD' ? '1200' : currency === 'GBP' ? '1000' : '1500'}`}
                     value={expenses.books}
                     onChange={(e) => setExpenses({...expenses, books: e.target.value})}
                   />
@@ -199,7 +243,7 @@ const BudgetCalculator = () => {
                   <Input
                     id="personal"
                     type="number"
-                    placeholder="e.g., 200000 (2 Lakhs)"
+                    placeholder={`e.g., ${currency === 'INR' ? '200000 (2 Lakhs)' : currency === 'USD' ? '3000' : currency === 'GBP' ? '2500' : '4000'}`}
                     value={expenses.personal}
                     onChange={(e) => setExpenses({...expenses, personal: e.target.value})}
                   />
@@ -209,7 +253,7 @@ const BudgetCalculator = () => {
                   <Input
                     id="insurance"
                     type="number"
-                    placeholder="e.g., 50000 (50,000)"
+                    placeholder={`e.g., ${currency === 'INR' ? '50000 (50,000)' : currency === 'USD' ? '1500' : currency === 'GBP' ? '800' : '1200'}`}
                     value={expenses.insurance}
                     onChange={(e) => setExpenses({...expenses, insurance: e.target.value})}
                   />
@@ -223,45 +267,45 @@ const BudgetCalculator = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Budget Summary</CardTitle>
-                <CardDescription>Your estimated annual costs</CardDescription>
+                <CardDescription>Your estimated annual costs in {selectedCurrency.name}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span>Tuition Fees</span>
-                    <span className="font-medium">₹{(parseFloat(expenses.tuition) || 0).toLocaleString()}</span>
+                    <span className="font-medium">{formatCurrency(parseFloat(expenses.tuition) || 0)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Accommodation</span>
-                    <span className="font-medium">₹{(parseFloat(expenses.accommodation) || 0).toLocaleString()}</span>
+                    <span className="font-medium">{formatCurrency(parseFloat(expenses.accommodation) || 0)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Food & Groceries</span>
-                    <span className="font-medium">₹{(parseFloat(expenses.food) || 0).toLocaleString()}</span>
+                    <span className="font-medium">{formatCurrency(parseFloat(expenses.food) || 0)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Transportation</span>
-                    <span className="font-medium">₹{(parseFloat(expenses.transport) || 0).toLocaleString()}</span>
+                    <span className="font-medium">{formatCurrency(parseFloat(expenses.transport) || 0)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Books & Supplies</span>
-                    <span className="font-medium">₹{(parseFloat(expenses.books) || 0).toLocaleString()}</span>
+                    <span className="font-medium">{formatCurrency(parseFloat(expenses.books) || 0)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Personal Expenses</span>
-                    <span className="font-medium">₹{(parseFloat(expenses.personal) || 0).toLocaleString()}</span>
+                    <span className="font-medium">{formatCurrency(parseFloat(expenses.personal) || 0)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Health Insurance</span>
-                    <span className="font-medium">₹{(parseFloat(expenses.insurance) || 0).toLocaleString()}</span>
+                    <span className="font-medium">{formatCurrency(parseFloat(expenses.insurance) || 0)}</span>
                   </div>
                   <hr />
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total Annual Cost</span>
-                    <span className="text-primary">₹{total.toLocaleString()}</span>
+                    <span className="text-primary">{formatCurrency(total)}</span>
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Approximately ₹{(total / 100000).toFixed(1)} Lakhs per year
+                    {getConversionNote()}
                   </div>
                 </div>
               </CardContent>
