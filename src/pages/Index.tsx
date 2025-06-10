@@ -1,9 +1,10 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, GraduationCap, Calculator, Globe, Star, Brain, CheckCircle, TrendingUp, Award, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import Header from "@/components/Header";
 
 const Index = () => {
   const features = [
@@ -74,37 +75,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <GraduationCap className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-primary">AcademiaX</span>
-            </div>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/university-match" className="text-muted-foreground hover:text-primary transition-colors">
-                University Match
-              </Link>
-              <Link to="/budget-calculator" className="text-muted-foreground hover:text-primary transition-colors">
-                Budget Calculator
-              </Link>
-              <Link to="/sop-assistant" className="text-muted-foreground hover:text-primary transition-colors">
-                SOP Assistant
-              </Link>
-              <Link to="/application-tracker" className="text-muted-foreground hover:text-primary transition-colors">
-                Track Applications
-              </Link>
-            </nav>
-            <div className="flex items-center space-x-4">
-              <ThemeToggle />
-              <Button asChild>
-                <Link to="/get-started">Get Started</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4 relative overflow-hidden">
