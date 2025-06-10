@@ -148,10 +148,15 @@ const TourProvider: React.FC<TourProviderProps> = ({ children }) => {
       onClickClose={({ setIsOpen }) => setIsOpen(false)}
       showPrevNextButtons={false}
       showCloseButton={false}
-      showNavigation={false}
+      showNavigation={true}
       showBadge={true}
       padding={10}
       disableDotsNavigation={true}
+      afterOpen={(target) => target?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+      beforeClose={() => {
+        // Close tour when navigating away
+        return true;
+      }}
     >
       {children}
     </ReactTourProvider>

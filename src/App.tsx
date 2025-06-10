@@ -6,6 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import TourProvider from "@/components/TourProvider";
+import { useTour } from '@reactour/tour';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import UniversityMatch from "./pages/UniversityMatch";
@@ -17,6 +20,32 @@ import GetStarted from "./pages/GetStarted";
 
 const queryClient = new QueryClient();
 
+const TourController = () => {
+  const { setIsOpen } = useTour();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Close tour when navigating to a different page
+    setIsOpen(false);
+  }, [location.pathname, setIsOpen]);
+
+  return null;
+};
+
+const AppRoutes = () => (
+  <Routes>
+    <Route path="/" element={<Index />} />
+    <Route path="/get-started" element={<GetStarted />} />
+    <Route path="/university-match" element={<UniversityMatch />} />
+    <Route path="/budget-calculator" element={<BudgetCalculator />} />
+    <Route path="/sop-assistant" element={<SOPAssistant />} />
+    <Route path="/application-tracker" element={<ApplicationTracker />} />
+    <Route path="/country-guide" element={<CountryGuide />} />
+    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="system" storageKey="studyabroad-ui-theme">
@@ -25,17 +54,8 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/get-started" element={<GetStarted />} />
-              <Route path="/university-match" element={<UniversityMatch />} />
-              <Route path="/budget-calculator" element={<BudgetCalculator />} />
-              <Route path="/sop-assistant" element={<SOPAssistant />} />
-              <Route path="/application-tracker" element={<ApplicationTracker />} />
-              <Route path="/country-guide" element={<CountryGuide />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <TourController />
+            <AppRoutes />
           </BrowserRouter>
         </TourProvider>
       </TooltipProvider>
