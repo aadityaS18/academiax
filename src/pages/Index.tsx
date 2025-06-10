@@ -151,7 +151,7 @@ const Index = () => {
               >
                 <Link to={feature.link}>
                   <CardHeader>
-                    <div className="mb-4 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
+                    <div className="mb-4 transition-transform duration-300 group-hover:scale-110">{feature.icon}</div>
                     <CardTitle className="group-hover:text-primary transition-colors">
                       {feature.title}
                     </CardTitle>
