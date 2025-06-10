@@ -51,10 +51,8 @@ const Index = () => {
   ];
 
   const stats = [
-    { number: "50,000+", label: "Students Helped", icon: <Users className="h-6 w-6" /> },
     { number: "200+", label: "Universities Covered", icon: <GraduationCap className="h-6 w-6" /> },
-    { number: "25+", label: "Countries", icon: <Globe className="h-6 w-6" /> },
-    { number: "95%", label: "Success Rate", icon: <TrendingUp className="h-6 w-6" /> }
+    { number: "4", label: "Top Countries", icon: <Globe className="h-6 w-6" />, description: "US, Canada, Ireland, Australia" }
   ];
 
   const whyChooseUs = [
@@ -152,13 +150,16 @@ const Index = () => {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 max-w-2xl mx-auto">
             {stats.map((stat, index) => (
               <Card key={index} className="border-0 bg-card/50 backdrop-blur-sm hover-scale">
                 <CardContent className="p-6 text-center">
                   <div className="flex justify-center mb-2 text-primary">{stat.icon}</div>
                   <div className="text-3xl font-bold text-primary mb-1">{stat.number}</div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  {stat.description && (
+                    <div className="text-xs text-muted-foreground mt-1">{stat.description}</div>
+                  )}
                 </CardContent>
               </Card>
             ))}
