@@ -23,6 +23,8 @@ const SignUpForm = ({ onToggleMode }: SignUpFormProps) => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Sign up attempt started', { email });
+    
     if (password !== confirmPassword) {
       toast({
         title: "Password Mismatch",
@@ -32,23 +34,53 @@ const SignUpForm = ({ onToggleMode }: SignUpFormProps) => {
       return;
     }
 
+    if (password.length < 6) {
+      toast({
+        title: "Password Too Short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
+      console.log('Calling signUp function...');
       const { error } = await signUp(email, password);
+      
+      console.log('SignUp response:', { error });
+      
       if (error) {
+        console.error('SignUp error:', error);
+        
+        let errorMessage = error.message;
+        
+        // Handle specific error cases
+        if (error.message.includes('User already registered')) {
+          errorMessage = "An account with this email already exists. Please try signing in instead.";
+        } else if (error.message.includes('Invalid email')) {
+          errorMessage = "Please enter a valid email address.";
+        } else if (error.message.includes('Password should be at least')) {
+          errorMessage = "Password must be at least 6 characters long.";
+        }
+        
         toast({
           title: "Sign Up Failed",
-          description: error.message,
+          description: errorMessage,
           variant: "destructive"
         });
       } else {
+        console.log('SignUp successful');
         toast({
           title: "Account Created!",
-          description: "Please check your email to verify your account."
+          description: "Please check your email to verify your account before signing in.",
+          duration: 5000
         });
+        // Don't automatically switch to login - let user know to check email
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('SignUp catch error:', error);
       toast({
         title: "Sign Up Failed",
         description: "An unexpected error occurred. Please try again.",
@@ -61,8 +93,10 @@ const SignUpForm = ({ onToggleMode }: SignUpFormProps) => {
 
   const handleGoogleSignUp = async () => {
     try {
+      console.log('Google sign up attempt...');
       await signInWithGoogle();
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Google signup error:', error);
       toast({
         title: "Sign Up Failed",
         description: "Failed to sign up with Google. Please try again.",
@@ -124,10 +158,11 @@ const SignUpForm = ({ onToggleMode }: SignUpFormProps) => {
             <Input
               id="signup-password"
               type="password"
-              placeholder="Create a password"
+              placeholder="Create a password (min 6 characters)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={6}
             />
           </div>
 
