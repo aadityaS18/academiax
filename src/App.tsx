@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import TourProvider from "@/components/TourProvider";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { useTour } from '@reactour/tour';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -17,6 +18,7 @@ import SOPAssistant from "./pages/SOPAssistant";
 import ApplicationTracker from "./pages/ApplicationTracker";
 import CountryGuide from "./pages/CountryGuide";
 import GetStarted from "./pages/GetStarted";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,7 @@ const TourController = () => {
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Index />} />
+    <Route path="/auth" element={<Auth />} />
     <Route path="/get-started" element={<GetStarted />} />
     <Route path="/university-match" element={<UniversityMatch />} />
     <Route path="/budget-calculator" element={<BudgetCalculator />} />
@@ -50,14 +53,16 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="system" storageKey="studyabroad-ui-theme">
       <TooltipProvider>
-        <TourProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <TourController />
-            <AppRoutes />
-          </BrowserRouter>
-        </TourProvider>
+        <AuthProvider>
+          <TourProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <TourController />
+              <AppRoutes />
+            </BrowserRouter>
+          </TourProvider>
+        </AuthProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>

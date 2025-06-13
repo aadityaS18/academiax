@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -225,7 +224,7 @@ const Index = () => {
             <CardContent>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" variant="secondary" asChild className="text-lg px-8 hover-scale">
-                  <Link to="/get-started">Get Started Today</Link>
+                  <Link to="/auth">Get Started Today</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="text-lg px-8 bg-primary-foreground text-primary border-primary-foreground hover:bg-primary-foreground/90 hover:text-primary">
                   <Link to="/university-match">Explore Universities</Link>
