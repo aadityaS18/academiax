@@ -23,6 +23,7 @@ interface University {
   ieltsScore?: string;
   toeflScore?: string;
   satRequired: 'required' | 'optional' | 'not-required';
+  minGPA?: number;
 }
 
 interface StudentProfile {
@@ -46,37 +47,60 @@ const UniversityMatch = () => {
 
   const [searchClicked, setSearchClicked] = useState(false);
 
-  // Extended university data with SAT requirements
+  // Expanded university data with more institutions
   const allUniversities: University[] = [
-    // USA Universities - SAT Required
-    { id: 1, name: "Harvard University", country: "USA", city: "Cambridge, MA", globalRank: 1, programs: ["Medicine", "Law", "Business", "Engineering", "Computer Science"], tuitionFee: "$54,000/year", admissionRate: "3.4%", satScore: "1460-1580", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'required' },
-    { id: 2, name: "Stanford University", country: "USA", city: "Stanford, CA", globalRank: 2, programs: ["Engineering", "Computer Science", "Business", "Medicine"], tuitionFee: "$56,000/year", admissionRate: "3.9%", satScore: "1440-1570", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'required' },
-    { id: 3, name: "MIT", country: "USA", city: "Cambridge, MA", globalRank: 3, programs: ["Engineering", "Computer Science", "Physics", "Mathematics"], tuitionFee: "$53,000/year", admissionRate: "6.7%", satScore: "1510-1580", ieltsScore: "7.5+", toeflScore: "100+", satRequired: 'required' },
+    // USA Universities - Top Tier
+    { id: 1, name: "Harvard University", country: "USA", city: "Cambridge, MA", globalRank: 1, programs: ["Medicine", "Law", "Business", "Engineering", "Computer Science", "Liberal Arts"], tuitionFee: "$54,000/year", admissionRate: "3.4%", satScore: "1460-1580", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'required', minGPA: 3.9 },
+    { id: 2, name: "Stanford University", country: "USA", city: "Stanford, CA", globalRank: 2, programs: ["Engineering", "Computer Science", "Business", "Medicine", "Liberal Arts"], tuitionFee: "$56,000/year", admissionRate: "3.9%", satScore: "1440-1570", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'required', minGPA: 3.9 },
+    { id: 3, name: "MIT", country: "USA", city: "Cambridge, MA", globalRank: 3, programs: ["Engineering", "Computer Science", "Physics", "Mathematics", "Technology"], tuitionFee: "$53,000/year", admissionRate: "6.7%", satScore: "1510-1580", ieltsScore: "7.5+", toeflScore: "100+", satRequired: 'required', minGPA: 3.9 },
+    { id: 4, name: "California Institute of Technology", country: "USA", city: "Pasadena, CA", globalRank: 4, programs: ["Engineering", "Physics", "Chemistry", "Mathematics", "Computer Science"], tuitionFee: "$58,000/year", admissionRate: "6.4%", satScore: "1530-1580", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'required', minGPA: 3.9 },
+    { id: 5, name: "Princeton University", country: "USA", city: "Princeton, NJ", globalRank: 5, programs: ["Liberal Arts", "Engineering", "Economics", "Politics", "Computer Science"], tuitionFee: "$57,000/year", admissionRate: "5.8%", satScore: "1460-1570", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'required', minGPA: 3.9 },
     
     // USA Universities - SAT Optional
-    { id: 6, name: "University of Chicago", country: "USA", city: "Chicago, IL", globalRank: 10, programs: ["Economics", "Business", "Law", "Medicine"], tuitionFee: "$59,000/year", admissionRate: "7.4%", satScore: "1480-1580 (if submitted)", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'optional' },
-    { id: 7, name: "New York University", country: "USA", city: "New York, NY", globalRank: 30, programs: ["Business", "Arts", "Engineering", "Medicine"], tuitionFee: "$58,000/year", admissionRate: "12.8%", satScore: "1350-1530 (if submitted)", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'optional' },
-    { id: 8, name: "University of California, Berkeley", country: "USA", city: "Berkeley, CA", globalRank: 15, programs: ["Engineering", "Computer Science", "Business", "Law"], tuitionFee: "$46,000/year", admissionRate: "14.5%", satScore: "1330-1530 (if submitted)", ieltsScore: "7.0+", toeflScore: "90+", satRequired: 'optional' },
-    { id: 9, name: "Bowdoin College", country: "USA", city: "Brunswick, ME", globalRank: 50, programs: ["Liberal Arts", "Sciences", "Economics"], tuitionFee: "$60,000/year", admissionRate: "9.0%", satScore: "Test-optional", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'optional' },
-    { id: 10, name: "Wesleyan University", country: "USA", city: "Middletown, CT", globalRank: 55, programs: ["Liberal Arts", "Sciences", "Film Studies"], tuitionFee: "$61,000/year", admissionRate: "16.3%", satScore: "Test-optional", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'optional' },
+    { id: 6, name: "University of Chicago", country: "USA", city: "Chicago, IL", globalRank: 10, programs: ["Economics", "Business", "Law", "Medicine", "Liberal Arts"], tuitionFee: "$59,000/year", admissionRate: "7.4%", satScore: "1480-1580 (if submitted)", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'optional', minGPA: 3.8 },
+    { id: 7, name: "New York University", country: "USA", city: "New York, NY", globalRank: 30, programs: ["Business", "Arts", "Engineering", "Medicine", "Film"], tuitionFee: "$58,000/year", admissionRate: "12.8%", satScore: "1350-1530 (if submitted)", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'optional', minGPA: 3.6 },
+    { id: 8, name: "University of California, Berkeley", country: "USA", city: "Berkeley, CA", globalRank: 15, programs: ["Engineering", "Computer Science", "Business", "Law", "Liberal Arts"], tuitionFee: "$46,000/year", admissionRate: "14.5%", satScore: "1330-1530 (if submitted)", ieltsScore: "7.0+", toeflScore: "90+", satRequired: 'optional', minGPA: 3.7 },
+    { id: 9, name: "University of California, Los Angeles", country: "USA", city: "Los Angeles, CA", globalRank: 20, programs: ["Film", "Engineering", "Business", "Medicine", "Arts"], tuitionFee: "$45,000/year", admissionRate: "10.8%", satScore: "1290-1510 (if submitted)", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'optional', minGPA: 3.7 },
+    { id: 10, name: "Northwestern University", country: "USA", city: "Evanston, IL", globalRank: 25, programs: ["Journalism", "Business", "Engineering", "Medicine", "Liberal Arts"], tuitionFee: "$60,000/year", admissionRate: "7.2%", satScore: "1440-1550 (if submitted)", ieltsScore: "7.5+", toeflScore: "105+", satRequired: 'optional', minGPA: 3.8 },
+    { id: 11, name: "University of Southern California", country: "USA", city: "Los Angeles, CA", globalRank: 35, programs: ["Film", "Engineering", "Business", "Communications"], tuitionFee: "$62,000/year", admissionRate: "12%", satScore: "1350-1520 (if submitted)", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'optional', minGPA: 3.6 },
+    { id: 12, name: "Arizona State University", country: "USA", city: "Tempe, AZ", globalRank: 145, programs: ["Business", "Engineering", "Liberal Arts", "Communications"], tuitionFee: "$32,000/year", admissionRate: "88%", satScore: "1120-1360 (if submitted)", ieltsScore: "6.0+", toeflScore: "79+", satRequired: 'optional', minGPA: 3.0 },
 
-    // Canada Universities - SAT Optional/Not Required
-    { id: 20, name: "University of Toronto", country: "Canada", city: "Toronto, ON", globalRank: 25, programs: ["Medicine", "Engineering", "Business", "Computer Science"], tuitionFee: "CAD $58,000/year", admissionRate: "43%", satScore: "1350-1500 (optional)", ieltsScore: "6.5+", toeflScore: "100+", satRequired: 'optional' },
-    { id: 21, name: "McGill University", country: "Canada", city: "Montreal, QC", globalRank: 27, programs: ["Medicine", "Law", "Engineering", "Arts"], tuitionFee: "CAD $50,000/year", admissionRate: "46%", satScore: "1320-1480 (optional)", ieltsScore: "6.5+", toeflScore: "90+", satRequired: 'optional' },
-    { id: 22, name: "University of British Columbia", country: "Canada", city: "Vancouver, BC", globalRank: 40, programs: ["Engineering", "Business", "Medicine", "Arts"], tuitionFee: "CAD $45,000/year", admissionRate: "52%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "90+", satRequired: 'not-required' },
-    { id: 23, name: "University of Alberta", country: "Canada", city: "Edmonton, AB", globalRank: 45, programs: ["Engineering", "Medicine", "Business"], tuitionFee: "CAD $35,000/year", admissionRate: "58%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "86+", satRequired: 'not-required' },
+    // Canada Universities
+    { id: 20, name: "University of Toronto", country: "Canada", city: "Toronto, ON", globalRank: 25, programs: ["Medicine", "Engineering", "Business", "Computer Science", "Liberal Arts"], tuitionFee: "CAD $58,000/year", admissionRate: "43%", satScore: "1350-1500 (optional)", ieltsScore: "6.5+", toeflScore: "100+", satRequired: 'optional', minGPA: 3.7 },
+    { id: 21, name: "McGill University", country: "Canada", city: "Montreal, QC", globalRank: 27, programs: ["Medicine", "Law", "Engineering", "Arts", "Business"], tuitionFee: "CAD $50,000/year", admissionRate: "46%", satScore: "1320-1480 (optional)", ieltsScore: "6.5+", toeflScore: "90+", satRequired: 'optional', minGPA: 3.5 },
+    { id: 22, name: "University of British Columbia", country: "Canada", city: "Vancouver, BC", globalRank: 40, programs: ["Engineering", "Business", "Medicine", "Arts", "Forestry"], tuitionFee: "CAD $45,000/year", admissionRate: "52%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "90+", satRequired: 'not-required', minGPA: 3.3 },
+    { id: 23, name: "University of Alberta", country: "Canada", city: "Edmonton, AB", globalRank: 45, programs: ["Engineering", "Medicine", "Business", "Arts"], tuitionFee: "CAD $35,000/year", admissionRate: "58%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "86+", satRequired: 'not-required', minGPA: 3.2 },
+    { id: 24, name: "University of Waterloo", country: "Canada", city: "Waterloo, ON", globalRank: 50, programs: ["Engineering", "Computer Science", "Mathematics", "Business"], tuitionFee: "CAD $62,000/year", admissionRate: "53%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "90+", satRequired: 'not-required', minGPA: 3.5 },
+    { id: 25, name: "McMaster University", country: "Canada", city: "Hamilton, ON", globalRank: 55, programs: ["Medicine", "Engineering", "Business", "Health Sciences"], tuitionFee: "CAD $42,000/year", admissionRate: "60%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "86+", satRequired: 'not-required', minGPA: 3.0 },
 
-    // UK Universities - SAT Not Required
-    { id: 40, name: "University of Oxford", country: "UK", city: "Oxford", globalRank: 4, programs: ["Medicine", "Law", "Philosophy", "Engineering"], tuitionFee: "£38,000/year", admissionRate: "17.5%", satScore: "Not required", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'not-required' },
-    { id: 41, name: "University of Cambridge", country: "UK", city: "Cambridge", globalRank: 5, programs: ["Medicine", "Engineering", "Mathematics", "Natural Sciences"], tuitionFee: "£37,000/year", admissionRate: "21%", satScore: "Not required", ieltsScore: "7.5+", toeflScore: "110+", satRequired: 'not-required' },
-    { id: 42, name: "Imperial College London", country: "UK", city: "London", globalRank: 8, programs: ["Engineering", "Medicine", "Business", "Computer Science"], tuitionFee: "£35,000/year", admissionRate: "14.3%", satScore: "Not required", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'not-required' },
-    { id: 43, name: "University College London", country: "UK", city: "London", globalRank: 9, programs: ["Medicine", "Engineering", "Law", "Architecture"], tuitionFee: "£31,000/year", admissionRate: "63%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "92+", satRequired: 'not-required' },
+    // UK Universities
+    { id: 40, name: "University of Oxford", country: "UK", city: "Oxford", globalRank: 4, programs: ["Medicine", "Law", "Philosophy", "Engineering", "Liberal Arts"], tuitionFee: "£38,000/year", admissionRate: "17.5%", satScore: "Not required", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'not-required', minGPA: 3.8 },
+    { id: 41, name: "University of Cambridge", country: "UK", city: "Cambridge", globalRank: 5, programs: ["Medicine", "Engineering", "Mathematics", "Natural Sciences", "Liberal Arts"], tuitionFee: "£37,000/year", admissionRate: "21%", satScore: "Not required", ieltsScore: "7.5+", toeflScore: "110+", satRequired: 'not-required', minGPA: 3.8 },
+    { id: 42, name: "Imperial College London", country: "UK", city: "London", globalRank: 8, programs: ["Engineering", "Medicine", "Business", "Computer Science", "Physics"], tuitionFee: "£35,000/year", admissionRate: "14.3%", satScore: "Not required", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'not-required', minGPA: 3.7 },
+    { id: 43, name: "University College London", country: "UK", city: "London", globalRank: 9, programs: ["Medicine", "Engineering", "Law", "Architecture", "Liberal Arts"], tuitionFee: "£31,000/year", admissionRate: "63%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "92+", satRequired: 'not-required', minGPA: 3.3 },
+    { id: 44, name: "London School of Economics", country: "UK", city: "London", globalRank: 35, programs: ["Economics", "Business", "Law", "Politics", "Social Sciences"], tuitionFee: "£25,000/year", admissionRate: "8.9%", satScore: "Not required", ieltsScore: "7.0+", toeflScore: "100+", satRequired: 'not-required', minGPA: 3.6 },
+    { id: 45, name: "University of Edinburgh", country: "UK", city: "Edinburgh", globalRank: 40, programs: ["Medicine", "Engineering", "Business", "Arts", "Veterinary"], tuitionFee: "£28,000/year", admissionRate: "46%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "92+", satRequired: 'not-required', minGPA: 3.2 },
+    { id: 46, name: "King's College London", country: "UK", city: "London", globalRank: 45, programs: ["Medicine", "Law", "Business", "Liberal Arts", "Dentistry"], tuitionFee: "£29,000/year", admissionRate: "13%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "92+", satRequired: 'not-required', minGPA: 3.3 },
 
-    // Ireland Universities - SAT Not Required
-    { id: 60, name: "Trinity College Dublin", country: "Ireland", city: "Dublin", globalRank: 1, programs: ["Medicine", "Law", "Engineering", "Business"], tuitionFee: "€45,000/year", admissionRate: "35%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "90+", satRequired: 'not-required' },
-    { id: 61, name: "University College Dublin", country: "Ireland", city: "Dublin", globalRank: 2, programs: ["Business", "Engineering", "Medicine", "Agriculture"], tuitionFee: "€25,000/year", admissionRate: "85%", satScore: "Not required", ieltsScore: "6.0+", toeflScore: "80+", satRequired: 'not-required' },
-    { id: 62, name: "University College Cork", country: "Ireland", city: "Cork", globalRank: 3, programs: ["Medicine", "Engineering", "Business", "Arts"], tuitionFee: "€20,000/year", admissionRate: "75%", satScore: "Not required", ieltsScore: "6.0+", toeflScore: "80+", satRequired: 'not-required' },
-    { id: 63, name: "National University of Ireland Galway", country: "Ireland", city: "Galway", globalRank: 4, programs: ["Medicine", "Engineering", "Arts", "Science"], tuitionFee: "€18,000/year", admissionRate: "80%", satScore: "Not required", ieltsScore: "6.0+", toeflScore: "80+", satRequired: 'not-required' },
+    // Australia Universities
+    { id: 60, name: "University of Melbourne", country: "Australia", city: "Melbourne", globalRank: 33, programs: ["Medicine", "Engineering", "Business", "Liberal Arts", "Law"], tuitionFee: "AUD $45,000/year", admissionRate: "70%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "79+", satRequired: 'not-required', minGPA: 3.0 },
+    { id: 61, name: "Australian National University", country: "Australia", city: "Canberra", globalRank: 30, programs: ["Liberal Arts", "Engineering", "Computer Science", "Politics", "Economics"], tuitionFee: "AUD $47,000/year", admissionRate: "35%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "80+", satRequired: 'not-required', minGPA: 3.2 },
+    { id: 62, name: "University of Sydney", country: "Australia", city: "Sydney", globalRank: 40, programs: ["Medicine", "Engineering", "Business", "Liberal Arts", "Architecture"], tuitionFee: "AUD $48,000/year", admissionRate: "30%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "85+", satRequired: 'not-required', minGPA: 3.0 },
+
+    // Germany Universities
+    { id: 80, name: "Technical University of Munich", country: "Germany", city: "Munich", globalRank: 50, programs: ["Engineering", "Computer Science", "Business", "Medicine"], tuitionFee: "€350/semester", admissionRate: "8%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "88+", satRequired: 'not-required', minGPA: 3.3 },
+    { id: 81, name: "Ludwig Maximilian University", country: "Germany", city: "Munich", globalRank: 60, programs: ["Medicine", "Liberal Arts", "Law", "Business"], tuitionFee: "€150/semester", admissionRate: "25%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "80+", satRequired: 'not-required', minGPA: 3.0 },
+    { id: 82, name: "Heidelberg University", country: "Germany", city: "Heidelberg", globalRank: 65, programs: ["Medicine", "Liberal Arts", "Natural Sciences"], tuitionFee: "€171/semester", admissionRate: "20%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "80+", satRequired: 'not-required', minGPA: 3.0 },
+
+    // Ireland Universities
+    { id: 100, name: "Trinity College Dublin", country: "Ireland", city: "Dublin", globalRank: 1, programs: ["Medicine", "Law", "Engineering", "Business", "Liberal Arts"], tuitionFee: "€45,000/year", admissionRate: "35%", satScore: "Not required", ieltsScore: "6.5+", toeflScore: "90+", satRequired: 'not-required', minGPA: 3.3 },
+    { id: 101, name: "University College Dublin", country: "Ireland", city: "Dublin", globalRank: 2, programs: ["Business", "Engineering", "Medicine", "Agriculture", "Liberal Arts"], tuitionFee: "€25,000/year", admissionRate: "85%", satScore: "Not required", ieltsScore: "6.0+", toeflScore: "80+", satRequired: 'not-required', minGPA: 2.8 },
+    { id: 102, name: "University College Cork", country: "Ireland", city: "Cork", globalRank: 3, programs: ["Medicine", "Engineering", "Business", "Arts"], tuitionFee: "€20,000/year", admissionRate: "75%", satScore: "Not required", ieltsScore: "6.0+", toeflScore: "80+", satRequired: 'not-required', minGPA: 2.8 },
+
+    // Additional Universities for better matching
+    { id: 120, name: "University of Washington", country: "USA", city: "Seattle, WA", globalRank: 85, programs: ["Medicine", "Engineering", "Computer Science", "Business"], tuitionFee: "$40,000/year", admissionRate: "48%", satScore: "1220-1470 (optional)", ieltsScore: "7.0+", toeflScore: "92+", satRequired: 'optional', minGPA: 3.4 },
+    { id: 121, name: "Penn State University", country: "USA", city: "University Park, PA", globalRank: 95, programs: ["Engineering", "Business", "Liberal Arts", "Agriculture"], tuitionFee: "$38,000/year", admissionRate: "56%", satScore: "1160-1360 (optional)", ieltsScore: "6.5+", toeflScore: "80+", satRequired: 'optional', minGPA: 3.2 },
+    { id: 122, name: "University of Illinois", country: "USA", city: "Urbana-Champaign, IL", globalRank: 75, programs: ["Engineering", "Computer Science", "Business", "Agriculture"], tuitionFee: "$35,000/year", admissionRate: "45%", satScore: "1210-1470 (optional)", ieltsScore: "6.5+", toeflScore: "79+", satRequired: 'optional', minGPA: 3.3 },
   ];
 
   // Test preparation resources with corrected book links
@@ -134,10 +158,10 @@ const UniversityMatch = () => {
   const normalizeCountryName = (country: string): string => {
     const normalized = country.toLowerCase().trim();
     
-    if (normalized.includes('usa') || normalized.includes('america') || normalized.includes('states')) {
+    if (normalized.includes('usa') || normalized.includes('america') || normalized.includes('states') || normalized.includes('united states')) {
       return 'usa';
     }
-    if (normalized.includes('uk') || normalized.includes('britain') || normalized.includes('kingdom')) {
+    if (normalized.includes('uk') || normalized.includes('britain') || normalized.includes('kingdom') || normalized.includes('england')) {
       return 'uk';
     }
     if (normalized.includes('canada')) {
@@ -156,17 +180,53 @@ const UniversityMatch = () => {
     return normalized;
   };
 
+  const parseGPA = (gradesInput: string): number | null => {
+    const gradeStr = gradesInput.toLowerCase().trim();
+    
+    // Extract GPA from formats like "3.8 GPA", "GPA: 3.5", "3.7"
+    const gpaMatch = gradeStr.match(/(\d+\.?\d*)/);
+    if (gpaMatch) {
+      const gpa = parseFloat(gpaMatch[1]);
+      
+      // If it's already in 4.0 scale
+      if (gpa <= 4.0) {
+        return gpa;
+      }
+      
+      // Convert percentage to GPA (rough conversion)
+      if (gpa >= 50 && gpa <= 100) {
+        if (gpa >= 90) return 4.0;
+        if (gpa >= 85) return 3.7;
+        if (gpa >= 80) return 3.3;
+        if (gpa >= 75) return 3.0;
+        if (gpa >= 70) return 2.7;
+        if (gpa >= 65) return 2.3;
+        if (gpa >= 60) return 2.0;
+        return 1.7;
+      }
+    }
+    
+    return null;
+  };
+
+  const parseBudget = (budgetInput: string): number | null => {
+    const budgetStr = budgetInput.toLowerCase().replace(/[,$]/g, '');
+    const match = budgetStr.match(/(\d+)/);
+    return match ? parseInt(match[1]) : null;
+  };
+
   const getFilteredUniversities = () => {
     console.log("Search clicked:", searchClicked);
     console.log("Profile:", profile);
     
     if (!searchClicked) {
-      return allUniversities.slice(0, 3);
+      return allUniversities.slice(0, 6); // Show more featured universities
     }
 
-    let filtered = allUniversities;
+    let filtered = [...allUniversities];
     console.log("Total universities before filtering:", filtered.length);
 
+    // Country filtering
     if (profile.country.trim()) {
       const searchCountry = normalizeCountryName(profile.country);
       console.log("Normalized search country:", searchCountry);
@@ -183,13 +243,22 @@ const UniversityMatch = () => {
       console.log("Universities after country filtering:", filtered.length);
     }
 
+    // Field/Program filtering (more flexible)
     if (profile.field.trim()) {
-      const searchField = profile.field.toLowerCase();
-      console.log("Searching for field:", searchField);
+      const searchFields = profile.field.toLowerCase().split(/[,\s]+/).filter(f => f.length > 2);
+      console.log("Searching for fields:", searchFields);
       
       filtered = filtered.filter(uni => {
-        const hasField = uni.programs.some(program =>
-          program.toLowerCase().includes(searchField)
+        const hasField = searchFields.some(searchField =>
+          uni.programs.some(program =>
+            program.toLowerCase().includes(searchField) ||
+            searchField.includes(program.toLowerCase()) ||
+            // Additional matching for common field variations
+            (searchField.includes('comp') && program.toLowerCase().includes('computer')) ||
+            (searchField.includes('cs') && program.toLowerCase().includes('computer science')) ||
+            (searchField.includes('business') && program.toLowerCase().includes('economics')) ||
+            (searchField.includes('pre-med') && program.toLowerCase().includes('medicine'))
+          )
         );
         if (hasField) {
           console.log("Field match found:", uni.name, uni.programs);
@@ -200,6 +269,7 @@ const UniversityMatch = () => {
       console.log("Universities after field filtering:", filtered.length);
     }
 
+    // SAT preference filtering
     if (profile.satPreference.trim()) {
       console.log("Filtering by SAT preference:", profile.satPreference);
       
@@ -220,14 +290,84 @@ const UniversityMatch = () => {
       console.log("Universities after SAT filtering:", filtered.length);
     }
 
+    // GPA/Grades filtering (more flexible)
+    if (profile.grades.trim()) {
+      const userGPA = parseGPA(profile.grades);
+      console.log("User GPA parsed:", userGPA);
+      
+      if (userGPA !== null) {
+        filtered = filtered.filter(uni => {
+          // Show universities where user's GPA is within reasonable range
+          const minGPA = uni.minGPA || 2.5;
+          const matches = userGPA >= (minGPA - 0.3); // Give some flexibility
+          if (matches) {
+            console.log("GPA match found:", uni.name, "requires:", minGPA, "user has:", userGPA);
+          }
+          return matches;
+        });
+        
+        console.log("Universities after GPA filtering:", filtered.length);
+      }
+    }
+
+    // Budget filtering (flexible)
+    if (profile.budget.trim()) {
+      const userBudget = parseBudget(profile.budget);
+      console.log("User budget parsed:", userBudget);
+      
+      if (userBudget !== null) {
+        filtered = filtered.filter(uni => {
+          // Extract numeric value from tuition fee
+          const tuitionMatch = uni.tuitionFee.match(/(\d+,?\d+)/);
+          if (tuitionMatch) {
+            const tuition = parseInt(tuitionMatch[1].replace(',', ''));
+            const matches = userBudget >= tuition * 0.8; // Allow 20% flexibility
+            if (matches) {
+              console.log("Budget match found:", uni.name, "costs:", tuition, "budget:", userBudget);
+            }
+            return matches;
+          }
+          return true; // Include if can't parse tuition
+        });
+        
+        console.log("Universities after budget filtering:", filtered.length);
+      }
+    }
+
+    // Sort by global rank
     filtered.sort((a, b) => a.globalRank - b.globalRank);
 
     console.log("Final filtered universities:", filtered.length);
-    return filtered.length > 0 ? filtered : [];
+    
+    // If no matches, show some backup options based on less strict criteria
+    if (filtered.length === 0) {
+      console.log("No strict matches found, showing backup options...");
+      let backup = [...allUniversities];
+      
+      // Less strict filtering - just country or field
+      if (profile.country.trim()) {
+        const searchCountry = normalizeCountryName(profile.country);
+        backup = backup.filter(uni => normalizeCountryName(uni.country) === searchCountry);
+      } else if (profile.field.trim()) {
+        const searchField = profile.field.toLowerCase();
+        backup = backup.filter(uni => 
+          uni.programs.some(program => 
+            program.toLowerCase().includes(searchField) || 
+            searchField.includes(program.toLowerCase())
+          )
+        );
+      }
+      
+      backup.sort((a, b) => a.globalRank - b.globalRank);
+      return backup.slice(0, 10);
+    }
+    
+    return filtered.slice(0, 20); // Show more results
   };
 
   const handleSearch = () => {
     console.log("Search button clicked");
+    console.log("Current profile state:", profile);
     setSearchClicked(true);
   };
 
@@ -296,7 +436,7 @@ const UniversityMatch = () => {
                     <Label htmlFor="grades">Academic Grades</Label>
                     <Input
                       id="grades"
-                      placeholder="e.g., 3.8 GPA, 85%"
+                      placeholder="e.g., 3.8 GPA, 85%, 90%"
                       value={profile.grades}
                       onChange={(e) => setProfile({ ...profile, grades: e.target.value })}
                     />
@@ -306,7 +446,7 @@ const UniversityMatch = () => {
                     <Label htmlFor="budget">Budget (Annual)</Label>
                     <Input
                       id="budget"
-                      placeholder="e.g., $50,000"
+                      placeholder="e.g., $50,000, €30,000"
                       value={profile.budget}
                       onChange={(e) => setProfile({ ...profile, budget: e.target.value })}
                     />
@@ -316,7 +456,7 @@ const UniversityMatch = () => {
                     <Label htmlFor="country">Preferred Country</Label>
                     <Input
                       id="country"
-                      placeholder="e.g., USA, UK, Canada"
+                      placeholder="e.g., USA, UK, Canada, Germany"
                       value={profile.country}
                       onChange={(e) => setProfile({ ...profile, country: e.target.value })}
                     />
@@ -326,7 +466,7 @@ const UniversityMatch = () => {
                     <Label htmlFor="field">Field of Study</Label>
                     <Input
                       id="field"
-                      placeholder="e.g., Computer Science, Medicine"
+                      placeholder="e.g., Computer Science, Medicine, Business"
                       value={profile.field}
                       onChange={(e) => setProfile({ ...profile, field: e.target.value })}
                     />
@@ -424,6 +564,12 @@ const UniversityMatch = () => {
                           <span className="text-muted-foreground">Admission Rate:</span>
                           <span className="font-medium">{university.admissionRate}</span>
                         </div>
+                        {university.minGPA && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Min GPA:</span>
+                            <span className="font-medium">{university.minGPA}</span>
+                          </div>
+                        )}
                         {university.satScore && (
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">SAT Score:</span>
@@ -447,7 +593,7 @@ const UniversityMatch = () => {
                   <CardContent>
                     <h3 className="text-xl font-semibold mb-2">No matches found</h3>
                     <p className="text-muted-foreground">
-                      Try adjusting your search criteria to find more universities.
+                      Try adjusting your search criteria to find more universities. Consider broadening your field of study or country preferences.
                     </p>
                   </CardContent>
                 </Card>
