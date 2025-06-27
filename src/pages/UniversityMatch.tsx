@@ -1,14 +1,14 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap, MapPin, Star, BookOpen, Youtube, ExternalLink } from "lucide-react";
+import { GraduationCap, MapPin, Star, BookOpen, Youtube, ExternalLink, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { fetchUniversitiesFromApi, convertApiUniversityToLocalFormat } from "@/services/universityApi";
 
 interface University {
   id: number;
@@ -46,6 +46,8 @@ const UniversityMatch = () => {
   });
 
   const [searchClicked, setSearchClicked] = useState(false);
+  const [isLoadingApi, setIsLoadingApi] = useState(false);
+  const [apiUniversities, setApiUniversities] = useState<University[]>([]);
 
   // Expanded university data with more institutions
   const allUniversities: University[] = [
@@ -215,15 +217,40 @@ const UniversityMatch = () => {
     return match ? parseInt(match[1]) : null;
   };
 
+  const fetchApiUniversities = async (searchCountry?: string) => {
+    setIsLoadingApi(true);
+    console.log('Fetching API universities for country:', searchCountry);
+    
+    try {
+      const apiData = await fetchUniversitiesFromApi(searchCountry);
+      console.log('Raw API data received:', apiData.length);
+      
+      // Convert and limit the results
+      const convertedUniversities = apiData
+        .slice(0, 50) // Limit to 50 to avoid overwhelming the UI
+        .map((apiUni, index) => convertApiUniversityToLocalFormat(apiUni, index));
+      
+      console.log('Converted universities:', convertedUniversities.length);
+      setApiUniversities(convertedUniversities);
+    } catch (error) {
+      console.error('Error fetching API universities:', error);
+      setApiUniversities([]);
+    } finally {
+      setIsLoadingApi(false);
+    }
+  };
+
   const getFilteredUniversities = () => {
     console.log("Search clicked:", searchClicked);
     console.log("Profile:", profile);
     
     if (!searchClicked) {
-      return allUniversities.slice(0, 6); // Show more featured universities
+      return allUniversities.slice(0, 6); // Show featured universities
     }
 
-    let filtered = [...allUniversities];
+    // Combine local and API universities
+    const combinedUniversities = [...allUniversities, ...apiUniversities];
+    let filtered = [...combinedUniversities];
     console.log("Total universities before filtering:", filtered.length);
 
     // Country filtering
@@ -342,7 +369,7 @@ const UniversityMatch = () => {
     // If no matches, show some backup options based on less strict criteria
     if (filtered.length === 0) {
       console.log("No strict matches found, showing backup options...");
-      let backup = [...allUniversities];
+      let backup = [...combinedUniversities];
       
       // Less strict filtering - just country or field
       if (profile.country.trim()) {
@@ -359,16 +386,21 @@ const UniversityMatch = () => {
       }
       
       backup.sort((a, b) => a.globalRank - b.globalRank);
-      return backup.slice(0, 10);
+      return backup.slice(0, 15);
     }
     
-    return filtered.slice(0, 20); // Show more results
+    return filtered.slice(0, 30); // Show more results
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     console.log("Search button clicked");
     console.log("Current profile state:", profile);
     setSearchClicked(true);
+    
+    // Fetch API universities if country is specified
+    if (profile.country.trim()) {
+      await fetchApiUniversities(profile.country);
+    }
   };
 
   const getSatBadgeColor = (satRequired: string) => {
@@ -421,13 +453,19 @@ const UniversityMatch = () => {
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Tell us about your academic profile and we'll match you with the best universities worldwide.
               </p>
+              {searchClicked && (
+                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <span>Showing results from our database + live API data</span>
+                  {isLoadingApi && <Loader2 className="h-4 w-4 animate-spin" />}
+                </div>
+              )}
             </div>
 
             <Card className="max-w-2xl mx-auto">
               <CardHeader>
                 <CardTitle>Your Academic Profile</CardTitle>
                 <CardDescription>
-                  Fill in your details to get personalized university recommendations
+                  Fill in your details to get personalized university recommendations from our database + live API
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -502,16 +540,38 @@ const UniversityMatch = () => {
                   </div>
                 </div>
 
-                <Button onClick={handleSearch} className="w-full" size="lg">
-                  Find My Universities
+                <Button onClick={handleSearch} className="w-full" size="lg" disabled={isLoadingApi}>
+                  {isLoadingApi ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Searching Universities...
+                    </>
+                  ) : (
+                    'Find My Universities'
+                  )}
                 </Button>
               </CardContent>
             </Card>
 
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-center">
-                {searchClicked ? "Your University Matches" : "Featured Universities"}
-              </h2>
+              <div className="text-center">
+                <h2 className="text-2xl font-bold">
+                  {searchClicked ? "Your University Matches" : "Featured Universities"}
+                </h2>
+                {searchClicked && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Results include universities from our curated database and live API data
+                    {apiUniversities.length > 0 && ` (${apiUniversities.length} from API)`}
+                  </p>
+                )}
+              </div>
+
+              {isLoadingApi && (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin mr-2" />
+                  <span>Loading additional universities from API...</span>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {getFilteredUniversities().map((university) => (
@@ -533,6 +593,11 @@ const UniversityMatch = () => {
                           <Badge className={`text-xs ${getSatBadgeColor(university.satRequired)}`}>
                             {getSatBadgeText(university.satRequired)}
                           </Badge>
+                          {university.id >= 1000 && (
+                            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
+                              Live Data
+                            </Badge>
+                          )}
                         </div>
                       </div>
                     </CardHeader>
@@ -588,7 +653,7 @@ const UniversityMatch = () => {
                 ))}
               </div>
 
-              {searchClicked && getFilteredUniversities().length === 0 && (
+              {searchClicked && getFilteredUniversities().length === 0 && !isLoadingApi && (
                 <Card className="p-8 text-center">
                   <CardContent>
                     <h3 className="text-xl font-semibold mb-2">No matches found</h3>
